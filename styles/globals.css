@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:ital,wght@0,300;0,400;1,100;1,600&display=swap');
+
+@import '../public/nprogress.css';
+@import '../public/listMessages.css';
+
+:root {
+    --color: #1b87e5;
+    --colorhover: #005bb2;
+    /* --purple: #5531f7; */
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Poppins', sans-serif;
+    /* font-family: 'Dancing Script', cursive; */
+    /* font-size: 62.5%; */
+    padding: 0;
+    margin: 0;
+    /* box-shadow: 0px 10px 5px #888, 0px -10px 5px #888; */
+    user-select: none;
+    /* background: #c0bcbc; */
+
+
+}
+
+.centered {
+    margin: 3rem auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    z-index: 25;
+}
+
+/* Track */
+/* ::-moz-webkit-scrollbar-track,  */
+::-webkit-scrollbar-track {
+    border-radius: 15px;
+    background: inherit;
+    /* -moz-background: inherit; */
+}
+
+/* Handle */
+/* ::-moz-webkit-scrollbar-thumb,  */
+::-webkit-scrollbar-thumb {
+    background: var(--color);
+    border-radius: 15px;
+    -moz-background: var(--color);
+
+    /* border: 2px solid #291c1c; */
+}
+
+/* Handle on hover */
+/* ::-moz-webkit-scrollbar-thumb:hover,  */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--colorhover);
+}
+
+/* @media only screen and (max-width: 300px) {
+    html {
+        font-size: 45%;
+    }
+} */
+
+@media only screen and (min-width: 2500px) {
+
+    html {
+        font-size: 70%;
+    }
+}
+
+@media only screen and (min-width: 3000px) {
+
+    html {
+        font-size: 100%;
+    }
+}
