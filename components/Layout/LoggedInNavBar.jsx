@@ -7,7 +7,7 @@ import { AppBar, Box, Toolbar, IconButton, Typography, Badge, MenuItem, Menu, Av
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-import appName from '../appName';
+import appName from '../../utilsServer/appName';
 import { logoutUser } from '../../utils/authUser';
 import baseUrl from '../../utils/baseUrl';
 import { useSearchHook } from '../../custom-hook/search-hook';
@@ -57,7 +57,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
     >
       {/* ------------------ drop menu --------------------- */}
 
-      <Box sx={{ display: { xs: 'flex', md: 'none', sm: 'none', xs: 'none' }, justifyContent: 'center' }}>
+      <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' }, justifyContent: 'center' }}>
         <ToggleButton />
       </Box>
       <Box sx={{ display: { xs: 'flexbox', sm: 'none' } }}>
@@ -144,45 +144,54 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
 
           <Tooltip title='Message' arrow>
             <Box
+              component='a'
+              href='/messages'
               sx={{
+                color: 'white',
+                my: 'auto',
                 display: {
                   xs: 'none',
-                  sm: 'flex',
-                  // color: 'action.active'
+                  sm: 'flex'
                 }
               }}>
-              <Link href='/messages' >
+              <Box component='span' >
 
-                <Badge color="secondary"
+                <Badge color={darkMode ? 'success' : 'error'}
                   variant="dot"
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
-                  <MailIcon color={unreadMessage ? 'warning' : ''} />
+                  <MailIcon color={unreadMessage ? (darkMode ? 'success' : 'secondary') : 'white'} />
                 </Badge>
 
-              </Link>
+              </Box>
             </Box>
           </Tooltip>
+
+
           <Tooltip title='Notification' arrow>
             <Box
+              component='a'
+              href='/notifications'
               sx={{
+                my: 'auto',
+                color: 'white',
                 display: {
                   xs: 'none',
                   sm: 'flex',
-                  // color: 'action.active'
                 }
               }}>
-              <Link href='/notifications' >
-                <Badge color="secondary"
+              <Box variant='span' >
+
+                <Badge color={darkMode ? 'success' : 'error'}
                   sx={badgeStyle}
                   variant="dot"
                   invisible={!unreadNotification}
                   aria-label={unreadNotification} >
-                  <NotificationsIcon
-                    color={unreadNotification ? 'warning' : ''} />
+                  <NotificationsIcon color={unreadNotification ? (darkMode ? 'success' : 'secondary') : 'white'} />
                 </Badge>
-              </Link>
+
+              </Box>
             </Box>
           </Tooltip>
 

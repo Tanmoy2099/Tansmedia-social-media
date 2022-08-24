@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import appName from "../components/appName";
+import appName from "../utilsServer/appName";
 
 const regexUserName = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
 const regexEmailTest = new RegExp(/^[\w.! #$%&'*+/=? ^_`{|}~-]+@[\w].*[\w{2,3}]+$/);

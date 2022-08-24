@@ -10,6 +10,15 @@ router.get('/:username', authController.username);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 
+
+//Forgot Password
+router.post('/settings/forgotPassword', authController.forgotPassword);
+
+//Reset Password
+router.patch('/settings/resetPassword/:token', authController.resetPassword);
+
+
+
 router.use(authController.protect);
 
 router.get('/', authController.getUserData);
@@ -17,11 +26,8 @@ router.get('/', authController.getUserData);
 //UPDATE PROFILE DATA
 router.patch('/update', authController.updateProfile);
 
-//RESET PROFILE
-router.patch('/settings/password', authController.resetPassword);
-
-
-router.patch('/settings/dark', authController.darkModeToggle);
+//Update Password
+router.patch('/settings/updatePassword', authController.updatePassword);
 
 //UPDATE MESSAGE POPUP SETTINGS
 router.post('/settings/messagePopup', authController.messagePopup);

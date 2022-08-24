@@ -4,23 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 
-
-const MessageInputField = ({ sendMsg }) => {
-
-  const [text, setText] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-    sendMsg(text);
-
-
-    setLoading(false);
-  }
-
-
-
+const MessageInputField = ({ text, setText, handleSubmit,loading }) => {
 
 
   const InputFsStyle = { style: { fontSize: 18 } };

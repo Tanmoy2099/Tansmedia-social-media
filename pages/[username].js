@@ -31,6 +31,7 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
   const [activeItem, setActiveItem] = useState('profile');
   const [showToastr, setShowToastr] = useState(false);
   const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats);
+  
   const ownAccount = profile._id === user._id;
 
   const handleItemClick = item => setActiveItem(item);
@@ -51,7 +52,7 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
         if (res.data.status !== 'ok') throw new Error(res.data.message);
         setPosts(res.data.data);
 
-      } catch (error) { console.error(error.message) }
+      } catch (error) { console.log(error.message) }
 
       setLoading(false)
     }
@@ -59,6 +60,8 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
     getPosts();
 
   }, [router.query.username]);
+
+  // console.table(posts)
 
   useEffect(() => {
     showToastr && setTimeout(() => {
@@ -99,7 +102,10 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
             setUserFollowStats={setUserFollowStats}
           />
           {posts.length > 0 ? getUsersPosts : <>
-            <Box sx={{ display: 'flexbox', justifyContent: 'center' }}>
+            <Box sx={{
+              display: 'flexbox',
+              justifyContent: 'center'
+            }}>
               <Container>
                 <NoProfilePosts />
               </Container>

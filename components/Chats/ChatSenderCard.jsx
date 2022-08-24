@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Avatar, Box, Badge, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography, Popover, Button } from '@mui/material';
+import { Avatar, Box, Badge, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography, Popover, Button, Paper } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 import { useRouter } from "next/router";
@@ -12,18 +12,13 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
   const [anchor, setAnchor] = useState(null);
   const router = useRouter();
 
-  console.log(connectedUsers)  // Remove log
-
   const isOnline = connectedUsers.length > 0 && connectedUsers.filter(user => user.userId === chat.messagesWith).length > 0;
-
-
-
 
   const popupDelete = <>
     <IconButton aria-label="delete"
       onClick={(e) => setAnchor(e.currentTarget)}
       sx={{ height: 'fit-content', my: 'auto' }}>
-      <DeleteOutlineIcon />
+      <DeleteOutlineIcon sx={{ color: 'white' }} />
     </IconButton>
 
     <Popover
@@ -62,18 +57,19 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
 
 
 
-  const badgeStyle = { cursor: 'pointer', height: 'fit-content', margin: 'auto 0.4rem' };
+  const badgeStyle = { cursor: 'pointer', height: 'fit-content', m: 'auto', fontSize: '25' };
 
 
   return (
-    <>
+    <Paper sx={{}}>
       <List sx={{
         maxWidth: '25rem',
         color: 'white',
         borderRadius: '5px',
-        bgcolor: (router.query?.message === chat.messagesWith) ? '#002984' : '#039be5',
+        cursor: 'pointer',
+        bgcolor: (router.query.message === chat.messagesWith) ? '#002981' : '#0029c1',
         '&:hover': {
-          bgColor: '#002984'
+          bgColor: '#002981'
         }
 
       }}>
@@ -81,7 +77,7 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
           onClick={() => router.push(`/messages?message=${chat.messagesWith}`, undefined, { shallow: true })} >
 
           <ListItemAvatar>
-            <Badge color="warning"
+            <Badge color="success"
               variant="dot"
               invisible={!isOnline}
               aria-label={chat.name}
@@ -93,24 +89,21 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
           <ListItemText
             primary={
               <>
+                <Typography variant='span' component='h5'> {chat.name} </Typography>
 
-                <Typography variant='span' component='h5'>
-                  {chat.name}{' | '} <Typography variant='span' style={{ fontSize: '0.7rem' }} >{calculateTime(chat.date)}</Typography>
-                </Typography>
               </>
             }
-            secondary={<Typography variant='span' component='h5'>
-              {chat.lastMessage?.length > 20
-                ? `${chat.lastMessage.substring(0, 20)} ...`
-                : chat.lastMessage}
-            </Typography>
+            secondary={<>
+              <Typography variant='span' component='h4' sx={{color:'white'}}>{chat.lastMessage?.length > 20 ? `${chat.lastMessage.substring(0, 20)} ...` : chat.lastMessage}</Typography>
+              <Typography variant='span' sx={{ fontSize: '0.65rem', color:'white' }} >{calculateTime(chat.date)}</Typography>
+            </>
             }
           />
           <Box sx={{ flexGrow: 1 }} />
           {popupDelete}
         </ListItem>
       </List>
-    </>
+    </Paper>
   )
 }
 

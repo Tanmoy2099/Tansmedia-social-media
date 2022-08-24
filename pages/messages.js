@@ -3,69 +3,79 @@ import axios from 'axios';
 import { parseCookies } from 'nookies';
 import cookie from 'js-cookie';
 import { useRouter } from 'next/router';
-import {io} from 'socket.io-client';
-import { Box, Container, Paper, Tooltip } from '@mui/material';
+import { io } from 'socket.io-client';
+import { Box, Container, Drawer, IconButton, Paper, Tooltip } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+
 
 import getUserInfo from '../utils/getUserInfo';
 import Message from '../components/Notifications/Messages/Message';
-import baseUrl from '../utils/baseUrl';
+import baseUrl, { pureBaseUrl } from '../utils/baseUrl';
 import newMsgSound from '../utils/newMsgSound';
 
 import { NoNessages } from '../components/Layout/Nodata';
 import ChatSenderCard from '../components/Chats/ChatSenderCard';
 import ChatListSearch from '../components/Chats/ChatListSearch';
 import Banner from '../components/Notifications/Messages/Banner';
-import MessageInputField from '../components/Notifications/Messages/MessageInputField';
+import MessageInputField from '../components/UI/MessageInputField';
+
+
+
+
+
 
 const Messages = ({ chatsData, user }) => {
+
   const router = useRouter();
+
   const socket = useRef();
+  const positionRef = useRef();
+  //This ref is keeps the state of query string in url throughout re-renders It is the query setion in the url
+  const openChatId = useRef('');
 
   const [chats, setChats] = useState(chatsData);
   const [connectedUsers, setConnectedUsers] = useState([]);
   const [bannerData, setBannerData] = useState({ name: '', profilePicUrl: '' });
   const [messages, setMessages] = useState([]);
 
-  const positionRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const [text, setText] = useState("");
+  const [switchTabs, setSwitchTabs] = useState(false);
 
-  //This ref is keeps the state of query string in url throughout re-renders It is the query setion in the url
-  const openChatId = useRef('');
+
+
+console.log(connectedUsers);
+
 
 
   const scrollDivToBottom = positionRef => {
     positionRef.current !== null && positionRef.current.scrollIntoView({ behaviour: 'smooth' })
   };
 
+  const setMessageToUnread = async () => {
+    await axios.post(`${baseUrl}/chats`, {}, { headers: { Authorization: cookie.get("token") } });
+  };
+
 
   //Connection
   useEffect(() => {
 
-    if (socket.current) {
-      socket.current = io(baseUrl);
-    }
+    if (user.unreadMessage) setMessageToUnread();
+    if (!socket.current) { socket.current = io(pureBaseUrl) }
+
 
     if (socket.current) {
       socket.current.emit('join', { userId: user._id });
 
-      soc.current.on('connectedUsers', ({ users }) => {
+      socket.current.on('connectedUsers', ({ users }) => {
         users.length > 0 && setConnectedUsers(users);
-
-
-
       });
 
     }
-    if (chats.length > 0 && router.query.message) {
-      router.push(`/message?message=${chats[0].messageWith}`, undefined, { shallow: true })
-    }
 
-    return () => {
-      if (socket.current) {
-        socket.current.emit('disconnect');
-        socket.current.off();
-      }
+    if (chats.length > 0 && !router.query.message) {
+      router.push(`/messages?message=${chats[0].messagesWith}`, undefined, { shallow: true })
     }
-
 
   }, []);
 
@@ -74,9 +84,12 @@ const Messages = ({ chatsData, user }) => {
   useEffect(() => {
 
     const loadMessages = () => {
-      socket.current.emit('loadMessages', { user: user._id, messageWith: router.query.message });
+      socket.current.emit('loadMessages', {
+        userId: user._id,
+        messagesWith: router.query.message
+      });
 
-      socket.current.on('messagesLoaded', ({ chat }) => {
+      socket.current.on('messagesLoaded', async ({ chat }) => {
         setMessages(chat.messages);
         setBannerData({
           name: chat.messagesWith.name,
@@ -93,6 +106,7 @@ const Messages = ({ chatsData, user }) => {
 
         setBannerData({ name, profilePicUrl });
         setMessages([]);
+
         openChatId.current = router.query.message;
       });
     };
@@ -113,6 +127,15 @@ const Messages = ({ chatsData, user }) => {
   }
 
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setLoading(true);
+    sendMsg(text);
+    setText('');
+    setLoading(false);
+  }
+
+
   //Confirm sent & received msgs
   useEffect(() => {
     if (socket.current) {
@@ -130,14 +153,14 @@ const Messages = ({ chatsData, user }) => {
           });
         }
       });
-      socket.current.on('newMsgReceived', async newMsg => {
+      socket.current.on('newMsgReceived', async ({ newMsg }) => {
 
         let senderName;
-
 
         //when chat is opened inside browser
         if (newMsg.sender === openChatId.current) {
           setMessages(prev => [...prev, newMsg]);
+
           setChats(prev => {
             const prevChat = prev.find(chat => chat.messagesWith === newMsg.sender);
             prevChat.lastMessage = newMsg.msg;
@@ -159,7 +182,8 @@ const Messages = ({ chatsData, user }) => {
             });
 
           } else {
-            const { name, profilePicUrl } = await getUserInfo(newMSg.sender);
+            const { name, profilePicUrl } = await getUserInfo(newMsg.sender);
+
             senderName = name;
 
             const newChat = {
@@ -211,84 +235,165 @@ const Messages = ({ chatsData, user }) => {
   }
 
 
+  const searchChatWindow = <Box sx={{
+    maxWidth: '600px',
+    minWidth: '20rem',
+    height: '100%',
+    overflow: "auto",
+    mt: { xs: 1, sm: 1, ms: 2 }
+  }} >
+
+    <Tooltip title='Search or Create new Chat' arrow>
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ flexGrow: 1 }} />
+        <ChatListSearch chats={chats} setChats={setChats} />
+      </Box>
+    </Tooltip>
+
+    {chats.length > 0 && <Box
+      sx={{ width: '100%', maxHheight: '30rem', overflow: 'auto', my: 2 }}    >
+      {chats?.map((chat, i) => (
+        <ChatSenderCard key={i}
+          chat={chat}
+          connectedUsers={connectedUsers}
+          deleteChat={deleteChat} />
+      ))}
+    </Box>}
+  </Box>
+
+
+
+  const msgChatWindow = router.query.message && (
+    <Paper
+      sx={{
+      m: { xs: 0, sm: 0, md: 2, lg: 3 },
+      flexGrow: 1,
+      overFlow: 'auto',
+      height: '100%',
+      display: 'grid',
+      gridTemplateRows: '1fr 4fr 1fr',
+    }}>
+      <Box sx={{ display: 'flex', height: 'fit-content' }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Banner bannerData={bannerData} />
+        </Box>
+        <IconButton variant='contained'
+          sx={{
+            height: '100%',
+            my: 'auto',
+            mr: 1,
+            display: {
+              xs: 'flex',
+              sm: 'flex',
+              md: 'none',
+              lg: 'none',
+              xl: 'none'
+            }
+          }}
+          onClick={() => setSwitchTabs(prev => !prev)}>
+
+          <SearchIcon fontSize='medium' />
+
+        </IconButton>
+
+      </Box>
+
+      <Box sx={{
+        overFlow: 'auto',
+        overflowX: 'hidden',
+      }}>
+        {messages.length > 0 && (
+          <>
+            {messages.map((message, i) => (
+              <Message
+                positionRef={positionRef}
+                key={i}
+                bannerProfilePic={bannerData.profilePicUrl}
+                message={message}
+                user={user}
+                deleteMsg={deleteMsg}
+              />
+            ))}
+          </>
+        )}
+      </Box>
+
+      <Box>
+        <MessageInputField
+          text={text}
+          setText={setText}
+          loading={loading}
+          handleSubmit={handleSubmit}
+        />
+      </Box>
+    </Paper>
+  )
+
+
   return (
     <>
+
       <Container sx={{
-        width: { xs: '100%', sm: '100%', md: '90%', lg: '90%' }, p: { md: 1, lg: 1 },
-        minHeight: '30rem',
-        display: 'flex',
-        flexWrap: 'wrap'
+        width: '100%',
+        mt: 2,
+        p: { md: 1, lg: 1 },
+        // minHeight: '30rem'
+        height: '80vh'
       }}>
-        {/* ------------ chat user ----------------- */}
+
+        <Box
+          sx={{
+          display: {
+            xs: 'flexbox',
+            sm: 'flexbox',
+            md: 'none',
+            lg: 'none',
+            xl: 'none'
+          },
+          width: {
+            xs: '100%',
+            sm: '100%',
+          },
+          height: '100%',
+          mx: 'auto'
+        }}>
+
+          <Drawer
+            anchor='left'
+            open={switchTabs}
+            onClose={() => setSwitchTabs(false)} >
+
+            <Paper sx={{ pt: 6, pb: 2 }}>
+              {searchChatWindow}
+            </Paper>
+
+          </Drawer>
+
+
+          {msgChatWindow}
+        </Box>
 
         <Box sx={{
-          maxWidth: '20rem',
-          height: '99%',
-          minWidth: '20rem',
-          mt: { xs: 1, sm: 1, ms: 2 },
-          width: 'fit-content'
-        }} >
+          display: {
+            xs: 'none',
+            sm: 'none',
+            md: 'flex',
+            lg: 'flex',
+            xl: 'flex'
+          },
 
-          <Tooltip title='Search or Create new Chat' arrow>
-            <Box sx={{ display: 'flex' }}>
-              <Box sx={{ flexGrow: 1 }} />
-              <ChatListSearch chats={chats} setChats={setChats} />
-            </Box>
-          </Tooltip>
+          flexWrap: 'wrap',
+          width: {
+            md: '100%',
+            lg: '100%',
+            xl: '100%'
+          },
+          height: '100%'
+        }}>
 
-          {chats.length > 0 && <Box
-            sx={{ width: '100%', height: '100%', overflow: 'auto', mt: 2 }}>
-            {chats?.map((chat, i) => (
-              <ChatSenderCard key={i}
-                chat={chat}
-                connectedUsers={connectedUsers}
-                deleteChat={deleteChat} />
-            ))}
-          </Box>}
+          {searchChatWindow}
+          {msgChatWindow}
         </Box>
-        {/* --------------- chat window ------------------ */}
-        {router.query.message && (
-          <Paper sx={{
-            m: { xs: 0, sm: 0, md: 2, lg: 3 },
-            minWidth: { xs: '100%', sm: '100%', md: '37.5rem' },
-            // position: 'relative',
-            overFlow: 'auto',
-            overflowX: 'hidden',
-            maxHeight: '35rem',
-            display: 'grid',
-            gridTemplateRows: '1fr 4fr 1fr',
-          }}>
-
-            <Box >
-              <Banner bannerData={bannerData} />
-            </Box>
-
-
-            <Box>
-              {messages.length > 0 && (
-                <>
-                  {messages.map((message, i) => (
-                    <Message
-                      positionRef={positionRef}
-                      key={i}
-                      bannerProfilePic={bannerData.profilePicUrl}
-                      message={message}
-                      user={user}
-                      deleteMsg={deleteMsg}
-                    />
-                  ))}
-                </>
-              )}
-            </Box>
-            <Box >
-              <MessageInputField sendMsg={sendMsg} />
-            </Box>
-
-
-          </Paper>
-        )}
-
-
 
       </Container>
     </>

@@ -23,7 +23,7 @@ import calculateTime from '../../utils/calculateTime';
 import { likePost, deletePost } from '../../utils/postActions';
 
 
-const CardPost = ({ post, user, setPosts, setShowToastr, loading }) => {
+const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
 
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
@@ -244,7 +244,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading }) => {
 
           </CardContent>
 
-          <Divider />
+          <Divider display='hidden' />
 
           <CardContent>
             {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <><h5>Post:</h5>
@@ -253,14 +253,34 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading }) => {
               </Typography></>}
           </CardContent>
 
-          <Divider />
+          <Divider display='hidden' />
 
 
           <Box sx={{ display: 'flex', m: 1, width: 'fit-content' }}>
 
             {/* Post likes */}
             <Box component='span'
-              onClick={() => likePost(post._id, user._id, setLikes, setMsg, isLiked ? false : true)}
+              onClick={() => {
+
+                if (socket.current) {
+                  socket.current.emit('likePost', {
+                    postId: post._id,
+                    userId: user._id,
+                    like: isLiked ? false : true
+                  });
+
+                  socket.current.on('postLiked', () => {
+                    if (isLiked) {
+                      setLikes(prev => prev.filter(like => like.user !== user._id));
+                    } else {
+                      setLikes(prev => [...prev, { user: user._id }]);
+                    }
+                  })
+
+                } else {
+                  likePost(post._id, user._id, setLikes, setMsg, isLiked ? false : true)
+                }
+              }}
               sx={{ cursor: 'pointer' }} >
               {isLiked ? <FavoriteIcon color='error' /> : <FavoriteBorderIcon sx={{ cursor: 'pointer' }} color='error' />}
             </Box>
@@ -295,6 +315,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading }) => {
           {!post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
             user={user}
             postId={post._id}
+            socket={socket}
             setComments={setComments} />
           }
         </Paper>

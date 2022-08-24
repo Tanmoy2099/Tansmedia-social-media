@@ -5,6 +5,7 @@ import axios from 'axios';
 import { parseCookies, destroyCookie } from 'nookies';
 
 import '../styles/globals.css';
+import 'cropperjs/dist/cropper.css';
 
 import Layout from '../components/Layout/Layout';
 import store from '../Store/Store';
@@ -17,9 +18,9 @@ function MyApp({ Component, pageProps }) {
 
   return <>
     <Provider store={store}>
-        <Layout {...pageProps}>
-          <Component {...pageProps} />
-        </Layout>
+      <Layout {...pageProps}>
+        <Component {...pageProps} />
+      </Layout>
     </Provider>
   </>;
 }
@@ -31,12 +32,18 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
   let pageProps = {};
 
-  const protectedRoutes = ctx.pathname === '/'
-    || ctx.pathname === '/[username]'
-    || ctx.pathname === '/notifications'
-    || ctx.pathname === '/posts/[postId]'
-    || ctx.pathname === '/messages'
-    ;
+
+  const loggedPaths = ['/', '/[username]', '/notifications', '/posts/[postId]', '/messages']
+  const protectedRoutes = loggedPaths.includes(ctx.pathname);
+
+
+
+  // const protectedRoutes = ctx.pathname === '/'
+  //   || ctx.pathname === '/[username]'
+  //   || ctx.pathname === '/notifications'
+  //   || ctx.pathname === '/posts/[postId]'
+  //   || ctx.pathname === '/messages'
+  //   ;
 
 
   if (!token) {

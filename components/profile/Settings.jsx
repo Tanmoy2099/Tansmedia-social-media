@@ -162,7 +162,7 @@ const Settings = ({ newMessagePopup }) => {
   // ----------------------------------------------------------------------
 
 
-  //  ----------------------  Reset Password  --------------------- 
+  //  ----------------------  Change Password  --------------------- 
   const handlePasswordResetSubmit = async (e) => {
     e.preventDefault();
     const password = Password.value;

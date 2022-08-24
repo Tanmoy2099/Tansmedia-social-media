@@ -1,6 +1,6 @@
 // import { createRef } from 'react'
-import { useState, useEffect } from 'react';
-import { Box, Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Box } from '@mui/material';
 import Router from 'next/router';
 import nProgress from 'nprogress';
 // import { useSelector } from "react-redux";

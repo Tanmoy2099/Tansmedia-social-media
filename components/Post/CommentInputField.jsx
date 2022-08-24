@@ -5,7 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import SnackBarMsg from '../UI/SnackBarMsg';
 import { postComment } from "../../utils/postActions";
 
-const CommentInputField = ({ postId, user, setComments }) => {
+const CommentInputField = ({ postId, user, setComments, socket }) => {
 
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,10 +16,27 @@ const CommentInputField = ({ postId, user, setComments }) => {
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
-    await postComment(postId, user, text, setComments, setText, setMsg);
 
+    if (socket.current) {
+      socket.current.emit('commentAPost', {
+        text,
+        postId,
+        commentingUserId: user
+      })
+
+      socket.current.on('newCommentAdded', ({ newComment }) => {
+        setComments(prev => [newComment, ...prev]);
+      })
+
+      setText('')
+
+    } else {
+
+      await postComment(postId, user, text, setComments, setText, setMsg);
+    }
     setLoading(false);
   }
+
 
   const InputFsStyle = { style: { fontSize: 18 } };
   return (
@@ -52,7 +69,7 @@ const CommentInputField = ({ postId, user, setComments }) => {
 
           <Button type='submit'
             disabled={!text || loading}
-            sx={{ height: '2.5rem', m: 'auto 0.3rem'}}
+            sx={{ height: '2.5rem', m: 'auto 0.3rem' }}
             variant="contained">
             {loading ? <CircularProgress size='2rem' /> : <SendIcon />}
           </Button>

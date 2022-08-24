@@ -4,7 +4,7 @@ import React from 'react';
 
 const Banner = ({ bannerData }) => {
 
-  const { name, profilePiUrl } = bannerData;
+  const { name, profilePicUrl } = bannerData;
 
 
 
@@ -13,7 +13,7 @@ const Banner = ({ bannerData }) => {
     <Paper>
       <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content' }}>
         <ListItemAvatar>
-          <Avatar alt="profile pic" src={profilePiUrl} />
+          <Avatar alt="profile pic" src={profilePicUrl} />
         </ListItemAvatar>
         <ListItemText
           sx={{ width: 'fit-content', maxWidth: '10rem' }}

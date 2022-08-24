@@ -57,34 +57,80 @@ export const loginUser = async (user, setMsg, setFormLoading) => {
 };
 
 
-export const LoginRefresh = async () => {
-  const url = `/login_refresh`;
-  let res;
+export const resetPassword = async (user, setMsg, setFormLoading) => {
 
+  const url = `${baseUrl}/user/settings/forgotPassword`;
+  setFormLoading(true);
   try {
-    res = await Axios.get(url);
+    const res = await axios.post(url, user);
 
     if (res.data.status === 'ok') {
-      dispatch(userActions.setUser(res.data.data));
-      return res
-    } else {
-      throw new Error(res.data.message);
+      return true;
+    }
+    else {
+      setMsg({ hasMsg: true, mType: 'error', message: (res.data.message) });
+      return false;
     }
 
-    // setToken();
   } catch (error) {
-    catchErrors(error.response.data || error)
+    console.log(error.message);
   } finally {
-    return res
+    setFormLoading(false);
+
+  }
+};
+
+export const submitPasswordResetToken = async (resetToken, data, setMsg) => {
+
+  const url = `${baseUrl}/user/settings/resetPassword/${resetToken}`;
+
+  try {
+    const res = await axios.patch(url, data);
+
+    if (res.data.status !== 'ok') {
+      throw res.data.message
+    }
+
+    const token = res.data.data;
+
+    setToken(token);
+
+  } catch (error) {
+    console.log(error.message)
+    setMsg({ hasMsg: true, mType: 'error', message: (error.message) });
   }
 }
+
+
+
+// export const LoginRefresh = async () => {
+//   const url = `/login_refresh`;
+//   let res;
+
+//   try {
+//     res = await Axios.get(url);
+
+//     if (res.data.status === 'ok') {
+//       dispatch(userActions.setUser(res.data.data));
+//       return res
+//     } else {
+//       throw new Error(res.data.message);
+//     }
+
+//     // setToken();
+//   } catch (error) {
+//     catchErrors(error.response.data || error)
+//   } finally {
+//     return res
+//   }
+// }
 
 
 export const updatePassword = async (currentPassword, password, confirmPassword, setLoading, setMsg) => {
 
   const passwordConfirm = confirmPassword;
   try {
-    const url = `/settings/password`;
+    const url = `/settings/updatePassword`;
     const body = { currentPassword, password, passwordConfirm };
 
     const res = await Axios.patch(url, body);

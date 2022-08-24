@@ -1,7 +1,7 @@
 import { AppBar, Box, Stack, Toolbar, Typography } from '@mui/material';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import appName from '../appName';
+import appName from '../../utilsServer/appName';
 
 
 import ToggleButton from '../UI/toggleButton';

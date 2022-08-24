@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-import { Alert, AlertTitle, Avatar, Box, Button, CircularProgress, Divider, Grid, InputAdornment, Paper, TextField, IconButton, Typography } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, Button, CircularProgress, Divider, InputAdornment, Paper, TextField, IconButton, Typography } from "@mui/material";
 
 import uploadPic from "../../utils/uploadPicToCloudinary";
 import { submitNewPost } from "../../utils/postActions";
@@ -11,6 +11,7 @@ import SendIcon from '@mui/icons-material/Send';
 import PlaceIcon from '@mui/icons-material/Place';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+import CropImageModel from "./CropImageModel";
 
 const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
 
@@ -25,7 +26,7 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
   const [media, setMedia] = useState(null);
   const [mediaPreview, setMediaPreview] = useState(null);
 
-  // const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = e => {
 
@@ -103,7 +104,8 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
 
   return <Paper sx={{
     position: 'relative', my: 2,
-    minHeight: '5rem'
+    minHeight: '5rem',
+    // minWidth: 'fit-content'
   }}>
     {error !== null && <>
       <Alert severity="error"
@@ -112,132 +114,149 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
         {error}
       </Alert>
     </>}
+    {showModal ? <>
+      <CropImageModel
+        mediaPreview={mediaPreview}
+        setMedia={setMedia}
+        setShowModal={setShowModal}
+        setMediaPreview={setMediaPreview}
+      />
+    </> : <>
+      <Typography variant='h6' textAlign='center' sx={{ pt: 0.5 }}>Create post</Typography>
+      <Box component="form"
+        sx={{
+          m: 2,
+          transition: 'all 1s ease-in-out',
+          // display: showCreatePost ? 'block' : 'none',
+        }}
+        onSubmit={handleSubmit} >
 
-    <Typography variant='h6' textAlign='center' sx={{pt:0.5}}>Create post</Typography>
-    <Box component="form"
-      sx={{
-        m: 2,
-        transition: 'all 1s ease-in-out',
-        // display: showCreatePost ? 'block' : 'none',
-      }}
-      onSubmit={handleSubmit} >
 
+        <Box>
+          <Box sx={{ display: 'flex' }}>
+            <Avatar src={user.profilePicUrl}
+              sx={{ marginTop: '1rem' }}
+              alt="profile pic" size='large' />
 
-      <Box>
-        <Box sx={{ display: 'flex' }}>
-          <Avatar src={user.profilePicUrl}
-            sx={{ marginTop: '1rem' }}
-            alt="profile pic" size='large' />
+          </Box>
+          {/* location */}
+          <TextField
+            margin="normal"
+            variant="outlined"
+            color='success'
+            name="location"
+            label="Location"
+            type="text"
+            id="location"
+            size='small'
+            sx={{ mx: 'auto' }}
+            autoComplete="off"
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>
+                <PlaceIcon />
+              </InputAdornment>
+            }}
+            labelwidth={20}
+            value={newPost.location}
+            onChange={handleChange}
+
+          />
 
         </Box>
-        {/* location */}
+
+        <input type="file"
+          ref={inputRef}
+          name='media'
+          style={{
+            display: 'none',
+            height: '100%',
+            width: '100%'
+          }}
+          accept='image/*'
+          onChange={handleChange}
+        />
+        <Box
+          sx={addImageInputStyles()}
+          onClick={() => inputRef.current.click()}
+          onDragOver={e => dragEvent(e, true)}
+          onDragLeave={e => dragEvent(e, false)}
+          onDrop={e => {
+            dragEvent(e, true);
+
+            const droppedFile = Array.from(e.dataTransfer.files);
+
+            if (droppedFile?.length > 0) {
+              setMedia(droppedFile[0]);
+              setMediaPreview(URL.createObjectURL(droppedFile[0]));
+            }
+          }}
+        >
+
+          {(media === null) ? <>
+            <AddCircleIcon size='large' sx={{ fontSize: '4rem' }} />
+          </> : <>
+            <img src={mediaPreview}
+              alt='post Img'
+              size='small'
+              name='media'
+              style={{
+                height: '12rem',
+                width: '12rem'
+              }} />
+          </>}
+
+        </Box>
+        {mediaPreview !== null && <>
+          <Button variant='contained'
+            sx={{ my: 1, textTransform:'none' }}
+            onClick={() => setShowModal(true)}
+          >Crop Image</Button>
+        </>}
+
+        {/* post */}
         <TextField
           margin="normal"
           variant="outlined"
+          fullWidth
+          sx={{ mx: 'auto' }}
           color='success'
-          name="location"
-          label="Location"
+          name="text"
+          label="Create Post"
           type="text"
-          id="location"
-          size='small'
-          sx={{mx:'auto'}}
+          id="post"
+          multiline
+          maxRows={3}
           autoComplete="off"
-          InputProps={{
-            endAdornment: <InputAdornment position='end'>
-              <PlaceIcon />
-            </InputAdornment>
-          }}
+          InputProps={InputFsStyle}
+          InputLabelProps={InputFsStyle}
           labelwidth={20}
-          value={newPost.location}
+          value={newPost.text}
           onChange={handleChange}
-
         />
 
-      </Box>
 
-      <input type="file"
-        ref={inputRef}
-        name='media'
-        style={{
-          display: 'none',
-          height: '100%',
-          width: '100%'
-        }}
-        accept='image/*'
-        onChange={handleChange}
-      />
-      <Box
-        sx={addImageInputStyles()}
-        onClick={() => inputRef.current.click()}
-        onDragOver={e => dragEvent(e, true)}
-        onDragLeave={e => dragEvent(e, false)}
-        onDrop={e => {
-          dragEvent(e, true);
 
-          const droppedFile = Array.from(e.dataTransfer.files);
 
-          if (droppedFile?.length > 0) {
-            setMedia(droppedFile[0]);
-            setMediaPreview(URL.createObjectURL(droppedFile[0]));
-          }
-        }}
-      >
+        <Divider display='hidden' />
 
-        {(media === null) ? <>
-          <AddCircleIcon size='large' sx={{ fontSize: '4rem' }} />
-        </> : <>
-          <img src={mediaPreview}
-            alt='post Img'
-            size='small'
-            name='media'
-            style={{
-              height: '12rem',
-              width: '12rem'
-            }} />
-        </>}
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            variant="contained"
+            type='submit'
+            disabled={!newPost.text || loading}
+            sx={{ my: 1 }}>
+            {loading ? <CircularProgress size='2rem' sx={{ color: '#fff' }} /> : <SendIcon sx={{ color: '#fff' }} />}
+          </Button>
+        </Box>
 
       </Box>
 
-
-      {/* post */}
-      <TextField
-        margin="normal"
-        variant="outlined"
-        fullWidth
-        sx={{ mx: 'auto' }}
-        color='success'
-        name="text"
-        label="Create Post"
-        type="text"
-        id="post"
-        multiline
-        maxRows={3}
-        autoComplete="off"
-        InputProps={InputFsStyle}
-        InputLabelProps={InputFsStyle}
-        labelwidth={20}
-        value={newPost.text}
-        onChange={handleChange}
-      />
-
-      <Divider display='hidden' />
-
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button
-          variant="contained"
-          type='submit'
-          disabled={!newPost.text || loading}
-          sx={{ my: 1 }}>
-          {loading ? <CircularProgress size='2rem' sx={{ color: '#fff' }} /> : <SendIcon sx={{ color: '#fff' }} />}
-        </Button>
-      </Box>
-
-    </Box>
-
+    </>
+    }
     <IconButton color='primary'
       sx={{
-        left: {xs:'42%' , sm:'48%'},
+        left: { xs: '42%', sm: '48%' },
         position: 'absolute',
         bottom: -20
       }}
@@ -256,6 +275,7 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
     </IconButton>
 
     <Divider />
+
   </Paper>
 }
 

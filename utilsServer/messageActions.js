@@ -35,24 +35,20 @@ const sendMsg = async (userId, msgSendToUserId, msg) => {
       date: Date.now()
     };
 
-    const previousChat = user.chats.find(
-      chat => chat.messagesWith.toString() === msgSendToUserId
-    );
+    const previousChat = user.chats.find(chat => chat.messagesWith.toString() === msgSendToUserId);
 
     if (previousChat) {
       previousChat.messages.push(newMsg);
       await user.save();
-    }
-    //
-    else {
+
+    } else {
+
       const newChat = { messagesWith: msgSendToUserId, messages: [newMsg] };
       user.chats.unshift(newChat);
       await user.save();
     }
 
-    const previousChatForReceiver = msgSendToUser.chats.find(
-      chat => chat.messagesWith.toString() === userId
-    );
+    const previousChatForReceiver = msgSendToUser.chats.find(chat => chat.messagesWith.toString() === userId);
 
     if (previousChatForReceiver) {
       previousChatForReceiver.messages.push(newMsg);
@@ -64,6 +60,8 @@ const sendMsg = async (userId, msgSendToUserId, msg) => {
       msgSendToUser.chats.unshift(newChat);
       await msgSendToUser.save();
     }
+
+    // console.log(newMsg) //remove it
 
     return { newMsg };
   } catch (error) {
@@ -81,9 +79,8 @@ const setMsgToUnread = async userId => {
       await user.save();
     }
 
-    return;
   } catch (error) {
-    console.error(error);
+    console.error('setMsgToUnread', error);
   }
 };
 

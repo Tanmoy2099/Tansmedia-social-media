@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import baseUrl from "../../utils/baseUrl";
 import Searchbar from "../UI/Searchbar";
 import IncomingMsgArea from "./IncomingMsgArea";
+import { Paper } from "@mui/material";
 
 
 // import { resourceLimits } from "worker_threads";
@@ -81,7 +82,7 @@ function ChatListSearch({ chats, setChats }) {
   }, [text]);
 
   return (
-    <>
+    <Paper elevation={4}>
 
 
       {/* SEARCH BAR*/}
@@ -94,7 +95,7 @@ function ChatListSearch({ chats, setChats }) {
         onDropDown={text.length > 0 && <IncomingMsgArea data={results} onClick={addChat} />}
         loading={loading}
       />
-    </>
+    </Paper>
   );
 }
 

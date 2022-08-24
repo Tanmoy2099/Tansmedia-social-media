@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import io from 'socket.io-client';
 
-import { Backdrop, Box, Container, Divider, Fab, Stack, Typography } from '@mui/material';
+import { Backdrop, Box, Container, Divider, Fab, Tooltip, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import { parseCookies } from "nookies";
@@ -18,8 +18,12 @@ import Loader from '../components/Layout/CustomLoader/Loader';
 import getUserInfo from '../utils/getUserInfo';
 import MessageNotificationModel from '../components/Home/MessageNotificationModel';
 
+import newMsgSound from '../utils/newMsgSound';
+import NotificationPortal from '../components/Home/NotificationPortal';
+
 
 const Index = ({ user, postsData, errorLoading }) => {
+
   // convert it to useReducer
   const [posts, setPosts] = useState(postsData);
   const [showToastr, setShowToastr] = useState(false);
@@ -29,16 +33,20 @@ const Index = ({ user, postsData, errorLoading }) => {
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [newMessageReceived, setNewMessageReceived] = useState(null);
   const [newMessageModel, setNewMessageModel] = useState(false);
+  const [newNotification, setNewNotification] = useState(null);
+  const [notificationPopup, setNotificationPopup] = useState(false);
+
 
   const socket = useRef();
 
 
 
+
   useEffect(() => {
 
-    // if (!socket.current) {
-    //   socket.current = io(pureBaseUrl);
-    // }
+    if (!socket.current) {
+      socket.current = io(pureBaseUrl)
+    }
 
     if (socket.current) {
       socket.current.emit('join', { userId: user._id });
@@ -47,32 +55,69 @@ const Index = ({ user, postsData, errorLoading }) => {
         const { name, profilePicUrl } = await getUserInfo(newMsg.sender);
 
         if (user.newMessagePopup) {
-          setNewMessageReceived({ ...newMsg, senderName: name, senderProfilePicUrl: profilePicUrl });
+          setNewMessageReceived({
+            ...newMsg,
+            senderName: name,
+            senderProfilePicUrl: profilePicUrl
+          });
           setNewMessageModel(true);
         }
 
-      })
-    } else { socket.current = io(pureBaseUrl) }
+        newMsgSound(name);
+
+      });
+    }
 
     document.title = `Welcome, ${user.name.split(' ')[0]}`;
 
-    return () => {
-      if (socket.current) {
-        socket.current.emit('disconnect');
-        socket.current.off();
-      }
-    }
-
-
-
-
   }, []);
+
 
   useEffect(() => {
     showToastr && setTimeout(() => setShowToastr(false), 3000);
     return () => clearTimeout();
   }, [showToastr]);
 
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('newLikeNotificationReceived', ({ name, profilePicUrl, username, postId }) => {
+        setNewNotification({ name, profilePicUrl, username, postId, type: 'like' });
+
+        setNotificationPopup(true);
+      })
+    }
+  }, []);
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('newCommentNotificatioReceived', ({ name, profilePicUrl, username, postId, commentingUserId }) => {
+
+        if (user._id !== commentingUserId) {
+          setNewNotification({ name, profilePicUrl, username, postId, type: 'comment' });
+
+          setNotificationPopup(true);
+        }
+      })
+    }
+  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
   const fetchDataOnScroll = async () => {
 
@@ -92,11 +137,10 @@ const Index = ({ user, postsData, errorLoading }) => {
       setPageNumber(prev => prev + 1);
 
     } catch (error) {
-      alert('Error fetching posts')
+      console.log('Error fetching posts')
     }
     setLoading(false);
   }
-
 
 
   const getAllPosts = <>
@@ -110,6 +154,7 @@ const Index = ({ user, postsData, errorLoading }) => {
 
       {posts.map(post => <Box key={post._id} >
         <CardPost post={post}
+          socket={socket}
           user={user}
           loading={loading}
           setPosts={setPosts}
@@ -121,9 +166,24 @@ const Index = ({ user, postsData, errorLoading }) => {
     </InfiniteScroll>
   </>
 
-  return <>
+  return <Box sx={{ height: '100%', width: '100%' }}>
 
     {showToastr && <PostDeleteToastr />}
+
+
+    {newNotification !== null && (
+
+      <Tooltip title='Notification' >
+        <NotificationPortal
+          newNotification={newNotification}
+          notificationPopup={notificationPopup}
+          setNotificationPopup={setNotificationPopup}
+        />
+      </Tooltip>
+
+    )}
+
+
     <Box sx={{ display: 'relative' }}>
 
       {newMessageModel && newMessageReceived !== null && (
@@ -131,27 +191,29 @@ const Index = ({ user, postsData, errorLoading }) => {
           socket={socket}
           showNewMessageModel={setNewMessageModel}
           newMessageModel={newMessageModel}
-          username={user.username}
+          user={user}
         />
       )}
 
-      <Box>
-        {!showCreatePost && <Fab color="secondary"
-          title='Create post'
+      {/* <Box> */}
+      {!showCreatePost && <Tooltip title='Create post' >
+        <Fab color="secondary"
           sx={{
             zIndex: 1,
             my: 1,
             position: { xs: 'sticky', md: 'fixed' }, bottom: { md: '2.8rem' },
             left: { xs: '42%', sm: '45%', md: '2rem', lg: '3rem' },
             mx: { sm: 'auto', md: 0 },
-            size: { sm: 'small', ms: 'medium', lg: 'large' }
+            sizes: { sm: 'small', ms: 'medium', lg: 'large' }
           }}
           onClick={() => setShowCreatePost(true)}
           aria-label="add">
           <AddIcon />
         </Fab>
-        }
-      </Box>
+      </Tooltip>
+      }
+      {/* </Box> */}
+
 
       <Backdrop open={showCreatePost} sx={{ zIndex: 10 }}>
         <Container sx={{ maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' } }}>
@@ -160,7 +222,7 @@ const Index = ({ user, postsData, errorLoading }) => {
       </Backdrop>
       {(posts?.length === 0 || errorLoading) ? <NoPosts /> : getAllPosts}
     </Box>
-  </>
+  </Box>
 };
 
 export default Index;

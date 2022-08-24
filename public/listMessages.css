@@ -17,23 +17,28 @@
   object-fit: contain;
 }
 .ownBubble {
-  min-width: 60px;
+  /* min-width: 60px; */
+  min-width:fit-content;
   max-width: 700px;
-  padding: 14px 18px;
+  /* padding: 14px 18px; */
+  padding:10px;
   margin: 6px 8px;
-  background-color: #5b5377;
+  background-color: #0d47a1;
   border-radius: 16px 16px 0 16px;
-  border: 1px solid #443f56;
+  border: 1px solid #1e8ede;
 }
 .otherBubble {
-  min-width: 60px;
+  /* min-width: 60px; */
+  min-width:fit-content;
   max-width: 700px;
-  padding: 14px 18px;
+  /* padding: 14px 18px; */
+  padding:10px;
   margin: 6px 8px;
-  background-color: #6c8ea4;
+  background-color: #1976d2;
   border-radius: 16px 16px 16px 0;
-  border: 1px solid #54788e;
+  border: 1px solid #4397db;
 }
+
 .own {
   align-self: flex-end;
 }

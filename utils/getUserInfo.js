@@ -10,10 +10,16 @@ const getUserInfo = async userToFindId => {
     
     const res = await axios.get(url, header);
 
-    return { name: res.data.data.name, profilePicUrl: res.data.data.profilePicUrl };
+
+    return {
+      name: res.data.data.name,
+      profilePicUrl: res.data.data.profilePicUrl
+    };
+
   } catch (error) {
-    console.error(error);
+    console.log('getUserInfo', error);
   }
 };
+
 
 export default getUserInfo;

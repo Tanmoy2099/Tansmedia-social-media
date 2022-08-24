@@ -39,7 +39,8 @@ exports.getProfileDataForAPost = catchAsync(async (req, res, next) => {
 
   const posts = await PostModel.find({ user: user._id })
     .sort({ createAt: -1 })
-    .populate("comments.user");
+    .populate("comments.user")
+    .populate("user");
 
   res.status(200).json({
     status: 'ok',

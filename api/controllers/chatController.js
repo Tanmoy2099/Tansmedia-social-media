@@ -43,19 +43,21 @@ exports.getAllChats = catchAsync(async (req, res, next) => {
 
 exports.getUserInfo = catchAsync(async (req, res, next) => {
 
-  const { userId } = req;
+  const { userToFindId } = req.params;
 
-  const user = await UserModel.findById(req.params.userToFindId);
+  const user = await UserModel.findById(userToFindId);
 
   if (!user) return next(new AppError(404, 'User Not Found'));
 
+  const data = {
+    name: user.name,
+    profilePicUrl: user.profilePicUrl
+  }
 
-  res.status(200).jason({
+
+  res.status(200).json({
     status: 'ok',
-    data: {
-      name: user.name,
-      profilePicUrl: user.profilePicUrl
-    }
+    data
   })
 
 })

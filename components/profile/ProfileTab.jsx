@@ -1,61 +1,19 @@
 
-import { useState } from "react";
-import PropTypes from 'prop-types';
 
-import { Tabs, Tab, Typography, Box, Container, Paper, IconButton, TabScrollButton } from '@mui/material';
-
+import { Tabs, Tab, Container, Paper } from '@mui/material';
 import { tabsClasses } from '@mui/material/Tabs'
 
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
 
 function ProfileTab({ activeItem, handleItemClick, followerLength, followingLength, ownAccount, loggedUserFollowStats }) {
 
-  const handleChange = (e, val) => {
-
-    handleItemClick(val)
-  }
-
+  const handleChange = (e, val) => handleItemClick(val);
 
   const tabStyle = {
-    fontSize: { xs: '0.65rem', sm: '0.8rem', md:'1rem' },
+    fontSize: { xs: '0.65rem', sm: '0.8rem', md: '1rem' },
     p: { xs: '0.2rem', sm: '0.4rem', lg: '1rem' },
-    mx: { xs: '0.1rem', sm:'0.5rem', md:'1rem' },
+    mx: { xs: '0.1rem', sm: '0.5rem', md: '1rem' },
     minWidth: { xs: '2px' },
-    textTransform: 'none' 
+    textTransform: 'none'
   }
 
 

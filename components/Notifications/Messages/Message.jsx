@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Popover, Typography, Button, Box, IconButton } from '@mui/material';
+import { Popover, Typography, Button, Box, IconButton, Avatar } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import calculateTime from '../../../utils/calculateTime';
 
@@ -16,24 +16,18 @@ const Message = ({ message, user, deleteMsg, bannerProfilePic, positionRef }) =>
 
 
   const popupDelete = <>
-    <IconButton aria-label="delete"
-      onClick={(e) => setAnchor(e.currentTarget)}
-      sx={{ height: 'fit-content', my: 'auto' }}>
-      <DeleteOutlineIcon />
-    </IconButton>
-
     <Popover
-      open={Boolean(anchor)}
+      open={deleteIcon}
       anchorEl={anchor}
       anchorOrigin={{
         vertical: 'center',
-        horizontal: 'left'
+        horizontal: 'center'
       }}
       transformOrigin={{
         vertical: 'center',
         horizontal: 'right'
       }}
-      onClose={() => setAnchor(null)}
+      onClose={() => setDeleteIcon(false)}
     >
       <Box sx={{
         padding: '0.5rem',
@@ -58,8 +52,10 @@ const Message = ({ message, user, deleteMsg, bannerProfilePic, positionRef }) =>
       <div className={ifyouSender ? 'inlineContainer own' : 'inlineContainer'}
         onClick={() => ifyouSender && setDeleteIcon(prev => !prev)}
       >
-        <img className={ifyouSender ? user.profilePicUrl : bannerProfilePic} alt='propic ' />
-        <div className={ifyouSender ? 'ownBubble own' : 'otherbubble other'}>
+        
+        <Avatar src={ifyouSender ? user.profilePicUrl : bannerProfilePic} alt='propic ' size='small' />
+
+        <div className={ifyouSender ? 'ownBubble own' : 'otherBubble other'}>
           {message.msg}
         </div>
 

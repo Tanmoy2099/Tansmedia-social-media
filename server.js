@@ -41,7 +41,7 @@ const { addUser, removeUser, findConnectedUser } = require("./utilsServer/roomAc
 const { loadMessages, sendMsg, setMsgToUnread, deleteMsg } = require("./utilsServer/messageActions");
 
 const { likeOrUnlikePost } = require("./utilsServer/likeOrUnlikePost");
-
+const { newCommentNotification } = require('./utilsServer/gotNewComment');
 
 
 const unHandledCrash = (err) => {
@@ -57,48 +57,56 @@ process.on('uncaughtException', error => {
 });
 
 
+
+
+
+
 io.on('connection', socket => {
 
   socket.on('join', async ({ userId }) => {
 
     const users = await addUser(userId, socket.id);
 
-    console.log(users)
-
-    setInterval(() => {
-      socket.emit('connectedUsers', { users: users.filter(user => user.userId !== userId) }, 10000)
-    })
+    setInterval(() => socket.emit('connectedUsers', { users: users.filter(user => user.userId !== userId) }, 10000))
   });
 
   socket.on('loadMessages', async ({ userId, messagesWith }) => {
     const { chat, error } = await loadMessages(userId, messagesWith);
 
-    if (!error) {
-      socket.emit('messagesLoaded', { chat })
-    }
-    else {
-      socket.emit('noChatFound');
-    }
+    error ? socket.emit('noChatFound') : socket.emit('messagesLoaded', { chat })
+
   })
 
-  
-  
-  socket.on('sendNewMsg', async ({ userId, msgSendToUserId, msg }) => {
+  const sendNewMsgOrMSgNotification = async (values, forNewMsg = false) => {
+
+    const { userId, msgSendToUserId, msg } = values
     const { newMsg, error } = await sendMsg(userId, msgSendToUserId, msg);
-    
+
     const receiverSocket = findConnectedUser(msgSendToUserId);
-    
+
     if (receiverSocket) {
+
       //send to a specific socket
       io.to(receiverSocket.socketId).emit('newMsgReceived', { newMsg })
     } else {
       await setMsgToUnread(msgSendToUserId);
     }
-    
-    if (!error) socket.emit('msgSent', { newMsg });
-    
+
+
+    !error && (forNewMsg ? socket.emit('msgSent', { newMsg }) : socket.emit('msgSentFromNotification'));
+  }
+
+  socket.on('sendNewMsg', async (values) => {
+    await sendNewMsgOrMSgNotification(values, true);
   })
-  
+
+
+
+  socket.on('sendMsgFromNotification', async (values) => {
+    await sendNewMsgOrMSgNotification(values);
+  })
+
+
   socket.on('deleteMsg', async ({ userId, messagesWith, messageId }) => {
     const { success } = await deleteMsg(userId, messagesWith, messageId);
 
@@ -106,6 +114,51 @@ io.on('connection', socket => {
       socket.emit('msgDeleted');
     }
   })
+
+  socket.on('likePost', async ({ postId, userId, like }) => {
+    const {
+      success,
+      name,
+      profilePicUrl,
+      username,
+      postByUserId,
+      error } = await likeOrUnlikePost(postId, userId, like)
+
+    if (success) {
+      socket.emit('postLiked')
+
+      if (postByUserId !== userId) {
+
+        const receiverSocket = findConnectedUser(postByUserId);
+
+        if (receiverSocket && like) {
+
+          //use 'to' when i want to send data to any specific client, using the socketId
+          io.to(receiverSocket.socketId).emit('newLikeNotificationReceived', { name, profilePicUrl, username, postId })
+        }
+      }
+    }
+  })
+
+
+  socket.on('commentAPost', async ({ text, postId, commentingUserId }) => {
+
+    const { success, name, profilePicUrl, username, postOwnerId, newComment, error } = await newCommentNotification(text, postId, commentingUserId)
+
+    if (success) {
+      socket.emit('newCommentAdded', {newComment})
+
+      if (postOwnerId !== commentingUserId) {
+        const receiverSocket = findConnectedUser(postOwnerId);
+
+        if (receiverSocket) {
+          io.to(receiverSocket.socketId).emit('newCommentNotificatioReceived', { name, profilePicUrl, username, postId, commentingUserId })
+        }
+      }
+    }
+  })
+
+
 
   socket.on('disconnect', () => removeUser(socket.id))
 });

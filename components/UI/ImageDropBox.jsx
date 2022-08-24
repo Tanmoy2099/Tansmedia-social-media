@@ -12,13 +12,14 @@ const ImageDropBox = ({
   handleChange,
   media,
   setMedia,
-  profilePicUrl
+  profilePicUrl,
+  mediaPreview
 }) => {
 
-  
+
   const { darkMode } = useSelector(state => state.utility);
   const router = useRouter();
-  
+
 
   const signupRoute = router.pathname === "/signup";
 
@@ -89,7 +90,7 @@ const ImageDropBox = ({
           ) : (
             <Box sx={{ ...(highlighted && { color: "green" }), width: 'inherit', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Box component='img'
-                src={URL.createObjectURL(media)}
+                src={mediaPreview || URL.createObjectURL(media)}
                 alt="Profile pic"
                 sx={{ cursor: "pointer", width: '100%', height: '100%' }}
                 onClick={() => inputRef.current.click()}

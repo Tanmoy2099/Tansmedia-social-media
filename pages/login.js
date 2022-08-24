@@ -4,14 +4,14 @@ import cookies from 'js-cookie';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress} from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 
 import { loginUser } from '../utils/authUser';
 import SnackBarMsg from '../components/UI/SnackBarMsg';
-import appName from '../components/appName';
+import appName from '../utilsServer/appName';
 
 const Login = () => {
 
@@ -52,7 +52,7 @@ const Login = () => {
   };
 
 
-  
+
   const authLabel = () => emailOrUser.length < 1 ? 'Email or UserName' : (regexEmailTest.test(emailOrUser) ? 'Email' : 'UserName');
 
 
@@ -143,20 +143,24 @@ const Login = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, fontSize: '1.2rem' }}
+            sx={{ mt: 3, mb: 2, fontSize: '1.2rem', textTransform: 'none' }}
             disabled={!(emailOrUser && password)}
           >
-            {formLoading ? <CircularProgress /> : 'Sign In'}
+            {formLoading ? <CircularProgress fontSize='80%' /> : 'Sign In'}
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="/forgot-pasword" variant="body2" sx={{ fontSize: '1.1rem' }}>
-                Forgot password?
+              <Link href="/forgotPassword">
+                <Typography sx={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+                  Forgot password?
+                </Typography>
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2" sx={{ fontSize: '1.1rem' }}>
-                {"Don't have an account? Sign Up"}
+              <Link href="/signup">
+                <Typography sx={{ fontSize: '0.8rem', cursor: 'pointer' }}>
+                  Don't have an account? Sign Up
+                </Typography>
               </Link>
             </Grid>
           </Grid>

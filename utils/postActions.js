@@ -51,6 +51,7 @@ export const deletePost = async (postId, setPosts, setShowToastr, setMsg) => {
 };
 
 export const likePost = async (postId, userId, setLikes, setMsg, like = true) => {
+
   try {
     if (like) {
       const res = await Axios.post(`/like/${postId}`);

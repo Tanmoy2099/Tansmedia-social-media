@@ -1,12 +1,11 @@
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { Alert, AlertTitle, Snackbar } from '@mui/material';
 import _ from 'lodash';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Grid, Box, Avatar, Button, CssBaseline, TextField, Typography, Container, InputAdornment, CircularProgress } from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, Typography, Container, InputAdornment, CircularProgress } from '@mui/material';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -23,7 +22,6 @@ import baseUrl from '../utils/baseUrl';
 import { registerUser } from '../utils/authUser';
 import SnackBarMsg from '../components/UI/SnackBarMsg';
 
-import { userActions } from '../Store/user-slice';
 import { signupActions } from '../Store/Signup-slice';
 
 
@@ -330,9 +328,11 @@ const Signup = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, fontSize: '1.1rem' }} >
-            {/* {formLoading ? <CircularProgress size="1.5rem" color='success' /> : 'Signup'} */}
+            sx={{ mt: 3, mb: 2, fontSize: '1.1rem', textTransform:'none' }} >
+            {formLoading ? <CircularProgress fontSize="60%" color='success' /> : 'Signup'}
           </Button>
+
+
           <Grid container>
             <Grid item>
               <Link href="/login" variant="body1" >
