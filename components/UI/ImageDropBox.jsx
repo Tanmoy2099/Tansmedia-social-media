@@ -90,7 +90,7 @@ const ImageDropBox = ({
           ) : (
             <Box sx={{ ...(highlighted && { color: "green" }), width: 'inherit', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <Box component='img'
-                src={mediaPreview || URL.createObjectURL(media)}
+                src={mediaPreview}
                 alt="Profile pic"
                 sx={{ cursor: "pointer", width: '100%', height: '100%' }}
                 onClick={() => inputRef.current.click()}

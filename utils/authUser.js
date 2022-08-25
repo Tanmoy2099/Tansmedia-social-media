@@ -13,49 +13,30 @@ export const Axios = axios.create({
 });
 
 
-export const registerUser = async (user, profilePicUrl, setMsg, setFormLoading, dispatch) => {
+export const registerUser = async (user, profilePicUrl, dispatch) => {
 
   const url = `${baseUrl}/user/signup`;
-  try {
+  const res = await axios.post(url, { ...user, profilePicUrl });
 
-    const res = await axios.post(url, { ...user, profilePicUrl });
-
-    //res will send user token, need to save it
-    if (res.data.status === 'ok') { setToken(res.data.data) }
-    else {
-      setMsg({ hasMsg: true, type: 'error', message: (res.data.message) });
-    }
-
-  } catch (error) {
-  } finally {
+  //res will send user token, need to save it
+  if (res.data.status === 'ok') {
+    setToken(res.data.data)
     dispatch(signupActions.reset());
-    setFormLoading(false);
-
   }
+  else { throw new Error(res.data.message) }
 };
 
-export const loginUser = async (user, setMsg, setFormLoading) => {
+
+export const loginUser = async (user) => {
 
   const url = `${baseUrl}/user/login`;
-  setFormLoading(true);
-  try {
-    const res = await axios.post(url, user);
 
-    console.log(res.data)
-    if (res.data.status !== 'ok') {
+  const res = await axios.post(url, user);
 
-      // setMsg({ hasMsg: true, type: 'error', message: res.data.message });
-      throw res.data;
-    }
-    
-    setToken(res.data.data);
-    
-  } catch (error) {
-  } finally {
-    setFormLoading(false);
-
-  }
+  if (res.data.status === 'ok') { setToken(res.data.data) }
+  else { throw new Error(res.data.message) }
 };
+
 
 
 export const resetPassword = async (user, setMsg, setFormLoading) => {

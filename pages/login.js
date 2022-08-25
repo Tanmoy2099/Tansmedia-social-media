@@ -4,7 +4,7 @@ import cookies from 'js-cookie';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress, Alert, AlertTitle, Snackbar } from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress, Alert, AlertTitle, Snackbar, Paper } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -36,7 +36,6 @@ const Login = () => {
     document.title = `Welcome to ${appName()}`;
     const userEmail = cookies.get('userEmail');
     if (userEmail) setEmailOrUser(userEmail);
-
   }, []);
 
 
@@ -44,10 +43,29 @@ const Login = () => {
     event.preventDefault();
     setFormLoading(true);
 
+    setMsg(initialMsg);
+
     const value = regexEmailTest.test(emailOrUser) ? { email: emailOrUser, username: '' } : { email: '', username: emailOrUser }
 
     const user = { ...value, password };
-    await loginUser(user, setMsg, setFormLoading);
+    // await loginUser(user, setMsg);
+
+
+
+    try {
+      await loginUser(user)
+    } catch (error) {
+      setMsg({ hasMsg: true, type: 'error', message: (error.response?.data?.message || error.message) })
+    }
+
+
+
+
+
+
+
+
+    setFormLoading(false);
 
     // setMsg({ hasMsg: true, type: 'error', message: 'hello' })
 
@@ -65,36 +83,20 @@ const Login = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Box
+
+      {/* -------------------- Snackbar ---------------------------- */}
+      <SnackBarMsg msg={msg} setMsg={setMsg} />
+      {/* ---------------------------------------------------------- */}
+
+      <Paper
         sx={{
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          p: 1
         }}
       >
-        
-        {/* -------------------- Snackbar ---------------------------- */}
-
-        {/*A message section to show message or error */}
-        {/* <SnackBarMsg msg={msg} setMsg={setMsg} /> */}
-
-
-        {/* <Snackbar open={msg.hasMsg}
-          autoHideDuration={10000}
-          onClose={() => setMsg(initialMsg)}> */}
-
-          <Alert sx={{ width: '100%', fontSize: '1.2rem' }}
-            onClose={() => setMsg(initialMsg)}
-            severity={msg.type}
-          >
-            <AlertTitle>{_.capitalize(msg.type || 'error')}</AlertTitle>
-            {msg.message}
-          </Alert>
-        {/* </Snackbar> */}
-        {/* ----------------------------------------------------------------- */}
-
-
 
 
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -186,7 +188,7 @@ const Login = () => {
             </Grid>
           </Grid>
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
 }

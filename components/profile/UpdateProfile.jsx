@@ -131,13 +131,13 @@ const UpdateProfile = ({ profile }) => {
           />
 
 
-
-          {media && <Button variant='contained'
-            onClick={() => setShowModal(true)}
-            sx={{ textTransform: 'none', m: 'auto' }} size='small'>
-            Crop Image
-          </Button>}
-
+          {media && <Box sx={{ display: 'flex', justifyContent: 'center', my: 1 }}>
+            <Button variant='contained'
+              onClick={() => setShowModal(true)}
+              sx={{ textTransform: 'none', m: 'auto' }} size='small'>
+              Crop Image
+            </Button>
+          </Box>}
 
 
           {/* About */}

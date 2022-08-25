@@ -104,21 +104,6 @@ const Index = ({ user, postsData, errorLoading }) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
   const fetchDataOnScroll = async () => {
 
     const token = cookie.get('token');

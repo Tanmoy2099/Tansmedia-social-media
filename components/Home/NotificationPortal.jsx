@@ -6,9 +6,8 @@ import { useRouter } from 'next/router';
 import { useSelector } from "react-redux";
 
 
-// import newMsgSound from "../../utils/newMsgSound";
+import newMsgSound from "../../utils/newMsgSound";
 import calculateTime from "../../utils/calculateTime";
-import { styled } from "@mui/material/styles";
 
 
 
@@ -41,6 +40,7 @@ const NotificationPortal = ({ newNotification, notificationPopup, setNotificatio
       return linkTypography('started following you')
     }
   }
+  if (notificationPopup) newMsgSound()
 
 
 
@@ -102,7 +102,7 @@ const NotificationPortal = ({ newNotification, notificationPopup, setNotificatio
 
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        sx={{ p: 0, m: 0, mt:'3rem' }}
+        sx={{ p: 0, m: 0, mt: '3rem' }}
         open={notificationPopup}
         autoHideDuration={8000}
         onClose={handleClose}

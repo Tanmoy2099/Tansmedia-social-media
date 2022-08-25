@@ -1,52 +1,28 @@
-// import { createRef } from 'react'
+
 import { useEffect } from 'react';
-import { Box } from '@mui/material';
 import Router from 'next/router';
 import nProgress from 'nprogress';
-// import { useSelector } from "react-redux";
 
+import { Box } from '@mui/material';
 import CssBaseline from "@mui/material/CssBaseline";
-
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { grey } from '@mui/material/colors';
 
 import { useSelector, useDispatch } from 'react-redux';
 
 import Navbar from './Navbar';
 import Footer from './Footer/Footer';
-// import SearchArea from './SearchArea';
 import LoggedInNavBar from './LoggedInNavBar';
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import { utilityActions } from '../../Store/Utility-slice';
 
 const Layout = ({ children, user }) => {
-  // const { data, text } = useSelector(state => state.search);
-  // const contextRef = createRef();
 
   Router.onRouteChangeStart = () => nProgress.start();
   Router.onRouteChangeComplete = () => nProgress.done();
   Router.onRouteChangeError = () => nProgress.done();
 
-
   const dispatch = useDispatch();
   const { darkMode } = useSelector(state => state.utility);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   
   useEffect(() => {
@@ -90,17 +66,19 @@ const Layout = ({ children, user }) => {
             maxWidth: '100%',
             transition: 'all 300ms ease-in-out'
           }}>
-
             {children}
           </Box>
 
-        </> : <Box component='main' sx={{ transition: 'all 300ms ease-in-out' }}>
-          <Navbar />
-          <Box component='main' sx={{ minHeight: '65vh' }}>
-            {children}
+        </> : <>
+
+          <Box component='main' sx={{ transition: 'all 300ms ease-in-out' }}>
+            <Navbar />
+            <Box component='main' sx={{ minHeight: '65vh' }}>
+              {children}
+            </Box>
+            <Footer />
           </Box>
-          <Footer />
-        </Box>}
+        </>}
       </Box>
     </ThemeProvider>
   </>

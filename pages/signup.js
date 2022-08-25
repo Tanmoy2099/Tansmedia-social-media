@@ -1,12 +1,14 @@
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 
 import _ from 'lodash';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { Grid, Box, Avatar, Button, TextField, Typography, Container, InputAdornment, CircularProgress } from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, Typography, Container, InputAdornment, CircularProgress, Paper, Backdrop, IconButton } from '@mui/material';
 
+import CancelIcon from '@mui/icons-material/Cancel';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -16,13 +18,14 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import ImageDropBox from '../components/UI/ImageDropBox';
 import uploadPic from '../utils/uploadPicToCloudinary';
+import CropImageModel from '../components/Post/CropImageModel';
 
-import axios from 'axios';
 import baseUrl from '../utils/baseUrl';
 import { registerUser } from '../utils/authUser';
 import SnackBarMsg from '../components/UI/SnackBarMsg';
 
 import { signupActions } from '../Store/Signup-slice';
+
 
 
 let cancel;
@@ -37,11 +40,13 @@ const Signup = () => {
   const [isVisible, setIsVisible] = useState({ password: false, confirmPassword: false });
 
   const [media, setMedia] = useState(null);
+  const [mediaPreview, setMediaPreview] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
 
-  const initialMsg = { hasMsg: false, type: '', message: '' };
+  const initialMsg = { hasMsg: false, type: 'info', message: '' };
   const [msg, setMsg] = useState(initialMsg);
 
+  const [showModal, setShowModal] = useState(false);
   const [userNameAvailable, setUserNameAvailable] = useState(false);
   const [userNameLoading, setUserNameLoading] = useState(false);
   const [highlighted, setHighlighted] = useState(false);
@@ -98,6 +103,7 @@ const Signup = () => {
     const { files } = e.target;
     if (files && files.length > 0) {
       setMedia(files[0]);
+      setMediaPreview(URL.createObjectURL(files[0]));
     }
   }
 
@@ -108,9 +114,7 @@ const Signup = () => {
     let profilePicUrl;
     if (media !== null) {
       profilePicUrl = await uploadPic(media);
-      console.log(profilePicUrl);
     }
-
 
     if (media !== null && !profilePicUrl) {
       setFormLoading(false);
@@ -118,9 +122,65 @@ const Signup = () => {
     }
     const user = { name: Name.value, username: UserName.value, email: Email.value, password: Password.value, confirmPassword: ConfirmPassword.value, about: About.value };
 
-    await registerUser(user, profilePicUrl, setMsg, setFormLoading, dispatch);
-
+    try {
+      await registerUser(user, profilePicUrl, dispatch);
+    } catch (error) {
+      setMsg({ hasMsg: true, type: 'error', message: (error.response?.data?.message || error.message) })
+    }
+    setFormLoading(false);
   };
+
+
+
+
+  const cropImageBackdrop = <Backdrop open={showModal} sx={{ zIndex: 10 }}>
+    <Container sx={{ maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' }, position: 'relative' }}>
+      <Paper>
+        <CropImageModel
+          mediaPreview={mediaPreview}
+          setMedia={setMedia}
+          setShowModal={setShowModal}
+          setMediaPreview={setMediaPreview}
+        />
+      </Paper>
+
+      <IconButton color='primary'
+        sx={{
+          left: { xs: '42%', sm: '48%' },
+          position: 'absolute',
+          bottom: -20
+        }}
+        onClick={() => setShowModal(false)}
+        variant='contained'>
+        <CancelIcon sx={{
+          height: { xs: '2.5rem', xl: '3rem' },
+          width: { xs: '2.5rem', xl: '3rem' },
+          color: '#1e88e5',
+          '&:hover': {
+            color: '#1e9ee5',
+            bgcolor: '#eee',
+            borderRadius: '50%'
+          }
+        }} />
+      </IconButton>
+
+
+    </Container>
+  </Backdrop>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const removeAlertMsg = () => setMsg(initialMsg);
 
@@ -131,12 +191,16 @@ const Signup = () => {
 
   return (
     <Container component="main" maxWidth="md" sx={{ mb: 2 }}>
-      <Box
+
+      {cropImageBackdrop}
+
+      <Paper
         sx={{
           marginTop: 8,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
+          p:1
         }}
       >
 
@@ -153,6 +217,7 @@ const Signup = () => {
         <Box component="form" sx={{ mt: 1 }}
           onSubmit={handleSubmit} >
 
+
           {/* Image dropbox */}
           <ImageDropBox
             inputRef={inputRef}
@@ -161,7 +226,16 @@ const Signup = () => {
             handleChange={handlePhotoChange}
             media={media}
             setMedia={setMedia}
+            mediaPreview={mediaPreview}
           />
+
+          {media && <Box sx={{ display: 'flex', justifyContent: 'center', my: 1 }}>
+            <Button variant='contained'
+              onClick={() => setShowModal(true)}
+              sx={{ textTransform: 'none', m: 'auto' }} size='small'>
+              Crop Image
+            </Button>
+          </Box>}
 
 
           {/* UserName */}
@@ -328,7 +402,7 @@ const Signup = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, fontSize: '1.1rem', textTransform:'none' }} >
+            sx={{ mt: 3, mb: 2, fontSize: '1.1rem', textTransform: 'none' }} >
             {formLoading ? <CircularProgress fontSize="60%" color='success' /> : 'Signup'}
           </Button>
 
@@ -336,12 +410,14 @@ const Signup = () => {
           <Grid container>
             <Grid item>
               <Link href="/login" variant="body1" >
-                {"Already have an account? LogIn"}
+                <Typography variant='body2' component='h5' sx={{cursor:'pointer'}}>
+                Already have an account? LogIn
+                </Typography>
               </Link>
             </Grid>
           </Grid>
         </Box>
-      </Box>
+      </Paper>
     </Container>
   );
 }

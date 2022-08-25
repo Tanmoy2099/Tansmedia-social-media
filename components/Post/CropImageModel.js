@@ -6,6 +6,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import CropIcon from '@mui/icons-material/Crop';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
 
 const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal }) => {
 
@@ -16,7 +17,7 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
     if (cropper) {
       const media = cropper.getCroppedCanvas().toDataURL()
       setMedia(media);
-      if(setMediaPreview) setMediaPreview(media);
+      if (setMediaPreview) setMediaPreview(media);
 
       cropper.destroy();
     }
@@ -39,7 +40,7 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
 
   return (
     <>
-      <Box sx={{ display: 'Grid', gridTemplateColumns: '1fr 1fr', mb: '2rem', width: '100%' }}>
+      <Box sx={{ display: 'Grid', gridTemplateColumns: '8fr 1fr', mb: '2rem', width: '100%' }}>
 
         <Box sx={{ height: '80%' }}>
           <Cropper
@@ -62,8 +63,8 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
             onInitialized={cropper => setCropper(cropper)}
           />
         </Box>
-        <Box>
-          <div>
+        {/* <Box> */}
+        {/* <div>
 
             <Typography sx={{ textAlign: 'center' }}>
               Result
@@ -83,42 +84,44 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
               className="img-preview"
             />
 
-          </div>
+          </div> */}
 
-          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-            <Tooltip title='Reset (R)'>
-              <IconButton
-                onClick={() => cropper && cropper.reset()} >
-                <RedoIcon />
-              </IconButton>
-            </Tooltip>
+        {/* <Box sx={{ flexGrow: 1 }} /> */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', justifyContent: 'space-evenly', height: '100%' }}>
+          <Tooltip title='Reset (R)' placement="left-start">
+            <IconButton
+              onClick={() => cropper && cropper.reset()} >
+              <RedoIcon />
+            </IconButton>
+          </Tooltip>
 
-            <Tooltip title='Move (M)'>
-              <IconButton onClick={() => cropper && cropper.setDragMode("move")} >
-              </IconButton>
-            </Tooltip>
+          <Tooltip title='Move (M)' placement="left-start">
+            <IconButton onClick={() => cropper && cropper.setDragMode("move")} >
+              <OpenWithIcon />
+            </IconButton>
+          </Tooltip>
 
-            <Tooltip title='Cropbox (C)'>
-              <IconButton onClick={() => cropper && cropper.setDragMode("crop")} >
-                <CropIcon />
-              </IconButton>
-            </Tooltip>
+          <Tooltip title='Cropbox (C)' placement="left">
+            <IconButton onClick={() => cropper && cropper.setDragMode("crop")} >
+              <CropIcon />
+            </IconButton>
+          </Tooltip>
 
-            <Tooltip title='Close'>
-              <IconButton onClick={() => setShowModal(false)} >
-                <CancelIcon />
-              </IconButton>
-            </Tooltip>
+          <Tooltip title='Close' placement="left-end">
+            <IconButton onClick={() => setShowModal(false)} >
+              <CancelIcon />
+            </IconButton>
+          </Tooltip>
 
-            <Tooltip title='Ok'>
-              <IconButton
-                onClick={getCropData}>
-                <CheckIcon />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <Tooltip title='Done' placement="left-end">
+            <IconButton
+              onClick={getCropData}>
+              <CheckIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       </Box>
+      {/* </Box> */}
     </>
   )
 }

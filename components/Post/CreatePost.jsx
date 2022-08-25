@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-import { Alert, AlertTitle, Avatar, Box, Button, CircularProgress, Divider, InputAdornment, Paper, TextField, IconButton, Typography } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, Button, CircularProgress, Divider, InputAdornment, Paper, TextField, IconButton, Typography, ListItemAvatar, ListItem, ListItemText } from "@mui/material";
 
 import uploadPic from "../../utils/uploadPicToCloudinary";
 import { submitNewPost } from "../../utils/postActions";
@@ -132,13 +132,25 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
         onSubmit={handleSubmit} >
 
 
-        <Box>
-          <Box sx={{ display: 'flex' }}>
-            <Avatar src={user.profilePicUrl}
-              sx={{ marginTop: '1rem' }}
-              alt="profile pic" size='large' />
+        {/* <Box> */}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+          <ListItem alignItems="flex-start"
+            sx={{
+              cursor: 'pointer',
+              width: 'fit-content',
+              minWidth: '8rem'
+            }}>
+            <ListItemAvatar>
+              <Avatar src={user.profilePicUrl}
+                alt="profile pic" size='large' />
+            </ListItemAvatar>
+            <ListItemText
+              sx={{ width: 'fit-content' }}
+              primary={user.name}
+            />
+          </ListItem>
 
-          </Box>
+          <Box sx={{ flexGrow: 1 }} />
           {/* location */}
           <TextField
             margin="normal"
@@ -149,7 +161,7 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
             type="text"
             id="location"
             size='small'
-            sx={{ mx: 'auto' }}
+            sx={{ mx: 'auto', minWidth: '7rem' }}
             autoComplete="off"
             InputProps={{
               endAdornment: <InputAdornment position='end'>
@@ -161,81 +173,82 @@ const CreatePost = ({ user, setPosts, setShowCreatePost }) => {
             onChange={handleChange}
 
           />
-
         </Box>
-
-        <input type="file"
-          ref={inputRef}
-          name='media'
-          style={{
-            display: 'none',
-            height: '100%',
-            width: '100%'
-          }}
-          accept='image/*'
-          onChange={handleChange}
-        />
-        <Box
-          sx={addImageInputStyles()}
-          onClick={() => inputRef.current.click()}
-          onDragOver={e => dragEvent(e, true)}
-          onDragLeave={e => dragEvent(e, false)}
-          onDrop={e => {
-            dragEvent(e, true);
-
-            const droppedFile = Array.from(e.dataTransfer.files);
-
-            if (droppedFile?.length > 0) {
-              setMedia(droppedFile[0]);
-              setMediaPreview(URL.createObjectURL(droppedFile[0]));
-            }
-          }}
-        >
-
-          {(media === null) ? <>
-            <AddCircleIcon size='large' sx={{ fontSize: '4rem' }} />
-          </> : <>
-            <img src={mediaPreview}
-              alt='post Img'
-              size='small'
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Box sx={{ mx: 'auto' }}>
+            <input type="file"
+              ref={inputRef}
               name='media'
               style={{
-                height: '12rem',
-                width: '12rem'
-              }} />
-          </>}
+                display: 'none',
+                height: '100%',
+                width: '100%'
+              }}
+              accept='image/*'
+              onChange={handleChange}
+            />
+            <Box
+              sx={addImageInputStyles()}
+              onClick={() => inputRef.current.click()}
+              onDragOver={e => dragEvent(e, true)}
+              onDragLeave={e => dragEvent(e, false)}
+              onDrop={e => {
+                dragEvent(e, true);
 
+                const droppedFile = Array.from(e.dataTransfer.files);
+
+                if (droppedFile?.length > 0) {
+                  setMedia(droppedFile[0]);
+                  setMediaPreview(URL.createObjectURL(droppedFile[0]));
+                }
+              }}
+            >
+
+              {(media === null) ? <>
+                <AddCircleIcon size='large' sx={{ fontSize: '4rem' }} />
+              </> : <>
+                <img src={mediaPreview}
+                  alt='post Img'
+                  size='small'
+                  name='media'
+                  style={{
+                    height: '12rem',
+                    width: '12rem'
+                  }} />
+              </>}
+
+            </Box>
+            {mediaPreview !== null && <>
+              <Button variant='contained'
+                sx={{ my: 1, textTransform: 'none' }}
+                onClick={() => setShowModal(true)}
+              >Crop Image</Button>
+            </>}
+
+          </Box>
+
+          {/* post */}
+          <TextField
+            margin="normal"
+            variant="outlined"
+
+            sx={{ mx: 'auto', flexGrow: 1, height: '100%', ml: 1, minWidth: '15rem' }}
+            color='success'
+            name="text"
+            label="Create Post"
+            type="text"
+            id="post"
+            multiline
+            maxRows={4}
+            minRows={2}
+            autoComplete="off"
+            InputProps={InputFsStyle}
+            InputLabelProps={InputFsStyle}
+            labelwidth={20}
+            value={newPost.text}
+            onChange={handleChange}
+          />
         </Box>
-        {mediaPreview !== null && <>
-          <Button variant='contained'
-            sx={{ my: 1, textTransform:'none' }}
-            onClick={() => setShowModal(true)}
-          >Crop Image</Button>
-        </>}
-
-        {/* post */}
-        <TextField
-          margin="normal"
-          variant="outlined"
-          fullWidth
-          sx={{ mx: 'auto' }}
-          color='success'
-          name="text"
-          label="Create Post"
-          type="text"
-          id="post"
-          multiline
-          maxRows={3}
-          autoComplete="off"
-          InputProps={InputFsStyle}
-          InputLabelProps={InputFsStyle}
-          labelwidth={20}
-          value={newPost.text}
-          onChange={handleChange}
-        />
-
-
-
 
         <Divider display='hidden' />
 
