@@ -32,6 +32,23 @@ const Layout = ({ children, user }) => {
   const { darkMode } = useSelector(state => state.utility);
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   useEffect(() => {
     const mode = JSON.parse(localStorage.getItem("mode"));
     if (!mode) {
@@ -57,9 +74,7 @@ const Layout = ({ children, user }) => {
     palette: {
       mode: 'dark'
     }
-  });
-
-
+  })
 
 
   return <>
@@ -75,6 +90,7 @@ const Layout = ({ children, user }) => {
             maxWidth: '100%',
             transition: 'all 300ms ease-in-out'
           }}>
+
             {children}
           </Box>
 

@@ -4,7 +4,7 @@ import cookies from 'js-cookie';
 import Link from 'next/link';
 import _ from 'lodash';
 
-import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress } from '@mui/material';
+import { Grid, Box, Avatar, Button, TextField, FormControlLabel, Checkbox, Typography, Container, InputAdornment, CircularProgress, Alert, AlertTitle, Snackbar } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -23,7 +23,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
 
-  const initialMsg = { hasMsg: false, type: '', message: '' };
+  const initialMsg = { hasMsg: false, type: 'info', message: '' };
   const [msg, setMsg] = useState(initialMsg);
 
   const [formLoading, setFormLoading] = useState(false);
@@ -49,9 +49,11 @@ const Login = () => {
     const user = { ...value, password };
     await loginUser(user, setMsg, setFormLoading);
 
+    // setMsg({ hasMsg: true, type: 'error', message: 'hello' })
+
   };
 
-
+  // console.log(msg);
 
   const authLabel = () => emailOrUser.length < 1 ? 'Email or UserName' : (regexEmailTest.test(emailOrUser) ? 'Email' : 'UserName');
 
@@ -71,8 +73,27 @@ const Login = () => {
           alignItems: 'center',
         }}
       >
+        
+        {/* -------------------- Snackbar ---------------------------- */}
+
         {/*A message section to show message or error */}
-        <SnackBarMsg msg={msg} setMsg={setMsg} />
+        {/* <SnackBarMsg msg={msg} setMsg={setMsg} /> */}
+
+
+        {/* <Snackbar open={msg.hasMsg}
+          autoHideDuration={10000}
+          onClose={() => setMsg(initialMsg)}> */}
+
+          <Alert sx={{ width: '100%', fontSize: '1.2rem' }}
+            onClose={() => setMsg(initialMsg)}
+            severity={msg.type}
+          >
+            <AlertTitle>{_.capitalize(msg.type || 'error')}</AlertTitle>
+            {msg.message}
+          </Alert>
+        {/* </Snackbar> */}
+        {/* ----------------------------------------------------------------- */}
+
 
 
 

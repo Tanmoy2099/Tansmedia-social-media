@@ -6,6 +6,7 @@ import { parseCookies, destroyCookie } from 'nookies';
 
 import '../styles/globals.css';
 import 'cropperjs/dist/cropper.css';
+// import "react-toastify/dist/ReactToastify.css";
 
 import Layout from '../components/Layout/Layout';
 import store from '../Store/Store';

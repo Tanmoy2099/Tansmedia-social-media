@@ -99,10 +99,11 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
 
   const badgeStyle = { cursor: 'pointer', height: 'fit-content', margin: 'auto 0.4rem' };
 
-
+  const lightNav = darkMode ? { background: 'warnging' } : {}
   return <>
-    {/* <Box sx={{ flexGrow: 1, zIndex: 10 }}> */}
-    <AppBar position="sticky" sx={{ zIndex: 10 }}>
+    <AppBar position="sticky"
+
+      sx={{ zIndex: 10, ...lightNav }} >
       <Toolbar>
         <Link href='/' >
           <Tooltip title='Home' arrow>
@@ -156,12 +157,12 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
               }}>
               <Box component='span' >
 
-                <Badge color={darkMode ? 'success' : 'error'}
+                <Badge color={darkMode ? 'warning' : 'success'}
                   variant="dot"
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
-                  <MailIcon color={unreadMessage ? (darkMode ? 'success' : 'secondary') : 'white'} />
+                  <MailIcon color={unreadMessage ? (darkMode ? 'warning' : 'success') : 'white'} />
                 </Badge>
 
               </Box>
@@ -183,12 +184,12 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
               }}>
               <Box variant='span' >
 
-                <Badge color={darkMode ? 'success' : 'error'}
+                <Badge color={darkMode ? 'warning' : 'success'}
                   sx={badgeStyle}
                   variant="dot"
                   invisible={!unreadNotification}
                   aria-label={unreadNotification} >
-                  <NotificationsIcon color={unreadNotification ? (darkMode ? 'success' : 'secondary') : 'white'} />
+                  <NotificationsIcon color={unreadNotification ? (darkMode ? 'warning' : 'success') : 'white'} />
                 </Badge>
 
               </Box>
@@ -216,7 +217,6 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
       </Toolbar>
     </AppBar>
     {renderMenu}
-    {/* </Box> */}
 
   </>;
 }

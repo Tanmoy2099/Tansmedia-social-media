@@ -19,8 +19,10 @@ const newCommentNotification = async (text, postId, commentingUserId) => {
     const commentId = uuid();
 
     const newComment = {
-      _id: commentId, text, user: commentingUserId
-      // date: Date.now(),
+      _id: commentId,
+      text,
+      user: commentingUserId,
+      date: Date.now(),
     };
 
     await post.comments.unshift(newComment);

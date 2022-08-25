@@ -23,7 +23,7 @@ export const registerUser = async (user, profilePicUrl, setMsg, setFormLoading, 
     //res will send user token, need to save it
     if (res.data.status === 'ok') { setToken(res.data.data) }
     else {
-      setMsg({ hasMsg: true, mType: 'error', message: (res.data.message) });
+      setMsg({ hasMsg: true, type: 'error', message: (res.data.message) });
     }
 
   } catch (error) {
@@ -41,14 +41,15 @@ export const loginUser = async (user, setMsg, setFormLoading) => {
   try {
     const res = await axios.post(url, user);
 
-    if (res.data.status === 'ok') {
+    console.log(res.data)
+    if (res.data.status !== 'ok') {
 
-      setToken(res.data.data)
+      // setMsg({ hasMsg: true, type: 'error', message: res.data.message });
+      throw res.data;
     }
-    else {
-      setMsg({ hasMsg: true, mType: 'error', message: (res.data.message) });
-    }
-
+    
+    setToken(res.data.data);
+    
   } catch (error) {
   } finally {
     setFormLoading(false);
@@ -68,7 +69,7 @@ export const resetPassword = async (user, setMsg, setFormLoading) => {
       return true;
     }
     else {
-      setMsg({ hasMsg: true, mType: 'error', message: (res.data.message) });
+      setMsg({ hasMsg: true, type: 'error', message: (res.data.message) });
       return false;
     }
 
@@ -97,7 +98,7 @@ export const submitPasswordResetToken = async (resetToken, data, setMsg) => {
 
   } catch (error) {
     console.log(error.message)
-    setMsg({ hasMsg: true, mType: 'error', message: (error.message) });
+    setMsg({ hasMsg: true, type: 'error', message: (error.message) });
   }
 }
 
@@ -136,7 +137,7 @@ export const updatePassword = async (currentPassword, password, confirmPassword,
     const res = await Axios.patch(url, body);
 
     if (res.data.status !== 'ok') {
-      setMsg({ hasMsg: 'true', mType: 'error', message: res.data.message });
+      setMsg({ hasMsg: 'true', type: 'error', message: res.data.message });
       throw res.data.message
     }
     const token = res.data.data;

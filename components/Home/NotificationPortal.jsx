@@ -1,5 +1,5 @@
 
-import { Avatar, CardHeader, IconButton, Paper, Button, Snackbar, Typography } from '@mui/material';
+import { Avatar, CardHeader, IconButton, Paper, Button, Snackbar, Typography, Slide } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useRouter } from 'next/router';
@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 
 // import newMsgSound from "../../utils/newMsgSound";
 import calculateTime from "../../utils/calculateTime";
+import { styled } from "@mui/material/styles";
+
 
 
 
@@ -43,7 +45,7 @@ const NotificationPortal = ({ newNotification, notificationPopup, setNotificatio
 
 
   const notificationCard = <Paper sx={{ width: 'fit-content', height: 'fit-content', display: 'flex' }}>
-    {/* <Card sx={{ width: 'fit-content', height: 'fit-content' }}> */}
+
 
     <CardHeader
       avatar={
@@ -68,8 +70,15 @@ const NotificationPortal = ({ newNotification, notificationPopup, setNotificatio
       subheader={<Typography sx={{ fontSize: '0.7rem' }}>{calculateTime(Date.now())}</Typography>}
     />
     {action}
-    {/* </Card> */}
+
   </Paper>
+
+
+
+
+  function SlideTransition(props) {
+    return <Slide {...props} direction="left" />;
+  }
 
 
 
@@ -86,17 +95,18 @@ const NotificationPortal = ({ newNotification, notificationPopup, setNotificatio
 
   const handleClose = () => setNotificationPopup(false);
 
+
+
   return (
     <>
 
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        sx={{ p: 0, m: 0 }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        sx={{ p: 0, m: 0, mt:'3rem' }}
         open={notificationPopup}
-        autoHideDuration={6000}
+        autoHideDuration={8000}
         onClose={handleClose}
-      // message={notificationCard}
-      // action={action}
+        TransitionComponent={SlideTransition}
       >
         {notificationCard}
       </Snackbar>

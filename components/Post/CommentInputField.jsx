@@ -4,6 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 import SnackBarMsg from '../UI/SnackBarMsg';
 import { postComment } from "../../utils/postActions";
+import { array } from "prop-types";
 
 const CommentInputField = ({ postId, user, setComments, socket }) => {
 
@@ -25,7 +26,7 @@ const CommentInputField = ({ postId, user, setComments, socket }) => {
       })
 
       socket.current.on('newCommentAdded', ({ newComment }) => {
-        setComments(prev => [newComment, ...prev]);
+        setComments(prev => [...new Set([newComment, ...prev])]);
       })
 
       setText('')

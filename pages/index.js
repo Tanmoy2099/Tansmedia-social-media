@@ -159,7 +159,7 @@ const Index = ({ user, postsData, errorLoading }) => {
           loading={loading}
           setPosts={setPosts}
           setShowToastr={setShowToastr} />
-        <Divider sx={{ my: 1 }} />
+        <Divider sx={{ my: 1 }} display='hidden' />
       </Box>
       )}
 
