@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
-import { Avatar, Box, Badge, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography, Popover, Button, Paper } from '@mui/material';
+import { Avatar, Box, Badge, IconButton, List, ListItem, ListItemAvatar, ListItemText, Popover, Button, Paper } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { styled } from '@mui/material/styles';
 
 import { useRouter } from "next/router";
 import calculateTime from "../../utils/calculateTime";
+import StyledBadge from '../UI/StyledBadge';
 
 
 const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
@@ -12,6 +14,8 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
   const router = useRouter();
 
   const isOnline = connectedUsers.length > 0 && connectedUsers.filter(user => user.userId === chat.messagesWith).length > 0;
+
+
 
   const popupDelete = <>
     <IconButton aria-label="delete"
@@ -53,7 +57,7 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
 
 
 
-  const badgeStyle = { cursor: 'pointer', height: 'fit-content', m: 'auto', fontSize: '25' };
+  // const badgeStyle = { cursor: 'pointer', height: 'fit-content', m: 'auto', fontSize: '25' };
 
 
   return (
@@ -73,13 +77,31 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
           onClick={() => router.push(`/messages?message=${chat.messagesWith}`, undefined, { shallow: true })} >
 
           <ListItemAvatar>
-            <Badge color='success'
+            {/* <Badge color='success'
               variant="dot"
               invisible={!isOnline}
               aria-label={chat.name}
               sx={badgeStyle}>
               <Avatar alt="user pic" src={chat.profilePicUrl} />
-            </Badge>
+            </Badge> */}
+
+
+            <StyledBadge
+              overlap="circular"
+              invisible={!isOnline}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              variant="dot"
+            >
+              <Avatar alt="user pic" src={chat.profilePicUrl} />
+            </StyledBadge>
+
+
+
+
+
+
+
+
           </ListItemAvatar>
 
           <ListItemText
@@ -89,7 +111,7 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
               <span style={{ color: 'white', diaplay: 'block' }}>
                 {chat.lastMessage?.length > 20 ? `${chat.lastMessage.substring(0, 20)} ...` : chat.lastMessage}
               </span>
-              <br/>
+              <br />
               <span style={{ fontSize: '0.65rem', color: 'white' }} >{calculateTime(chat.date)}</span>
             </>
             }

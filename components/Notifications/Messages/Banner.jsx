@@ -1,6 +1,7 @@
-import { Avatar, Box, Divider, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
 import React from 'react';
+import { Avatar, Box, Divider, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
 
+import StyledBadge from '../../UI/StyledBadge';
 
 const Banner = ({ bannerData }) => {
 

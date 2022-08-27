@@ -21,6 +21,7 @@ import SearchArea from './SearchArea';
 
 import Searchbar from '../UI/Searchbar';
 import { useRouter } from 'next/router';
+import StyledBadge from '../UI/StyledBadge';
 
 
 export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNotification, unreadMessage, email }) {
@@ -119,6 +120,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
               cursor: 'pointer',
               color: 'white',
               textDecoration: 'none',
+              diaplay: { xs: 'none', sm: 'flex' }
             }}>
 
             <a>
@@ -126,6 +128,8 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
             </a>
 
           </Typography>
+
+
         </Tooltip>
 
         <Box sx={{ flexGrow: 1 }} />
@@ -162,22 +166,39 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                   sm: 'flex'
                 }
               }}>
-              <Box component='span' >
 
-                <Badge color={darkMode ? 'warning' : 'error'}
+
+              <Box component='span' sx={badgeStyle}>
+
+                {/* <Badge color={darkMode ? 'warning' : 'error'}
                   variant="dot"
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
                   {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color='white' />}
-                </Badge>
+                </Badge> */}
+
+                <StyledBadge
+                  overlap="circular"
+                  color='warning'
+                  invisible={!unreadMessage}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  variant="dot"
+                >
+                  {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color='white' />}
+                </StyledBadge>
+
+
+
+
+
 
               </Box>
             </Box>
           </Tooltip>
 
 
-          <Tooltip title='Notification' arrow>
+          <Tooltip title='Notification' arrow >
             <Box
               component='a'
               onClick={() => router.push('/notifications')}
@@ -189,15 +210,29 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                   sm: 'flex',
                 }
               }}>
-              <Box variant='span' >
+              <Box component='span' sx={badgeStyle}>
 
-                <Badge color={darkMode ? 'warning' : 'error'}
+                {/* <Badge color={darkMode ? 'warning' : 'error'}
                   sx={badgeStyle}
                   variant="dot"
                   invisible={!unreadNotification}
                   aria-label={unreadNotification} >
                   {unreadNotification ? <NotificationsActiveIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <NotificationsIcon color='white' />}
-                </Badge>
+                </Badge> */}
+
+
+                <StyledBadge
+                  overlap="circular"
+                  color='warning'
+                  invisible={!unreadNotification}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  variant="dot"
+                >
+                  {unreadNotification ? <NotificationsActiveIcon sx={{
+                    color: darkMode ? '#ffc107' : '#ffea00'
+                  }} /> : <NotificationsIcon color='white' />}
+                </StyledBadge>
+
 
               </Box>
             </Box>

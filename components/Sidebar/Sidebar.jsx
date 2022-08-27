@@ -6,13 +6,14 @@ import { Box, Tooltip, Badge, Typography, Paper, Avatar } from '@mui/material';
 
 import MailIcon from '@mui/icons-material/Mail';
 import DraftsIcon from '@mui/icons-material/Drafts';
-
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import HomeIcon from '@mui/icons-material/Home';
 
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import { logoutUser } from '../../utils/authUser';
+import StyledBadge from '../UI/StyledBadge';
 
 const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMessage, email }) => {
 
@@ -43,8 +44,43 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
           width: { md: 'fit-content', lg: '12rem' },
           flexDirection: 'column',
           display: { xs: 'none', md: 'flex' },
-
+          transition: 'all 300ms ease-in-out',
         }}>
+
+          <Tooltip title='Home' arrow sx={{ my: 1, ml: 1 }}>
+            <Box
+              onClick={() => router.push('/')}
+              sx={{
+                my: 'auto',
+                color: 'white',
+                display: {
+                  xs: 'none',
+                  sm: 'flex',
+                  cursor: 'pointer',
+                  borderBottom: (router.pathname === '/') ? '1px solid #ef6c00' : '0',
+                  pb: 1
+                }
+              }}>
+              <Box sx={{
+                display: 'flex',
+                mx: 1,
+              }}>
+                <HomeIcon sx={{ color: (darkMode ? 'white' : 'blue') }} />
+              </Box>
+
+              <Typography sx={{
+                color: darkMode ? 'white' : 'black',
+                display: { md: 'none', lg: 'block' }
+              }}
+
+              >Home</Typography>
+            </Box>
+          </Tooltip>
+
+
+
+
+
 
           <Tooltip title='Message' arrow>
             <Box
@@ -55,20 +91,32 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
                 my: 'auto',
                 display: {
                   xs: 'none',
-                  sm: 'flex'
+                  sm: 'flex',
+                  borderBottom: (router.pathname === '/messages') ? '1px solid #ef6c00' : '0',
+                  pb: 1
                 }
               }}>
               <Box sx={{ display: 'flex', cursor: 'pointer' }} >
 
-                <Badge color={darkMode ? 'warning' : 'error'}
+                {/* <Badge color={darkMode ? 'warning' : 'error'}
                   variant="dot"
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
                   {unreadMessage ? <DraftsIcon color='warning' /> : <MailIcon sx={{ color: darkMode ? 'white' : 'blue' }} />}
+                </Badge> */}
 
-
-                </Badge>
+                <Box component='span' sx={badgeStyle}>
+                  <StyledBadge
+                    overlap="circular"
+                    color='warning'
+                    invisible={!unreadMessage}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    variant="dot"
+                  >
+                    {unreadMessage ? <DraftsIcon color='warning' /> : <MailIcon sx={{ color: darkMode ? 'white' : 'blue' }} />}
+                  </StyledBadge>
+                </Box>
 
                 <Typography sx={{
                   color: darkMode ? 'white' : 'black',
@@ -80,6 +128,8 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
             </Box>
           </Tooltip>
 
+
+
           <Tooltip title='Notification' arrow sx={{ my: 1 }}>
             <Box
               component='a'
@@ -90,11 +140,13 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
                 display: {
                   xs: 'none',
                   sm: 'flex',
+                  borderBottom: (router.pathname === '/notifications') ? '1px solid #ef6c00' : '0',
+                  pb: 1
                 }
               }}>
               <Box sx={{ display: 'flex', cursor: 'pointer' }}>
 
-                <Badge color={darkMode ? 'warning' : 'error'}
+                {/* <Badge color={darkMode ? 'warning' : 'error'}
                   sx={badgeStyle}
                   variant="dot"
                   invisible={!unreadNotification}
@@ -103,8 +155,26 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
                   {unreadNotification ? <NotificationsActiveIcon color='warning' /> :
                     <NotificationsIcon sx={{ color: darkMode ? 'white' : 'blue' }} />}
 
+                </Badge> */}
 
-                </Badge>
+
+                <Box component='span' sx={badgeStyle}>
+
+
+                  <StyledBadge
+                    overlap="circular"
+                    color='warning'
+                    invisible={!unreadNotification}
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    variant="dot"
+                  >
+                    {unreadNotification ? <NotificationsActiveIcon color='warning' /> :
+                      <NotificationsIcon sx={{ color: darkMode ? 'white' : 'blue' }} />}
+                  </StyledBadge>
+
+                </Box>
+
+
                 <Typography sx={{
                   color: darkMode ? 'white' : 'black',
                   display: { md: 'none', lg: 'block' }
@@ -123,6 +193,8 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
                 display: {
                   xs: 'none',
                   sm: 'flex',
+                  borderBottom: (router.pathname === '/[username]') ? '1px solid #ef6c00' : '0',
+                  pb: 1
                 }
               }}>
               <Box sx={{ display: 'flex', cursor: 'pointer' }}>
@@ -141,17 +213,18 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
 
           <Tooltip title='Logout' arrow sx={{ my: 1, ml: 1 }}>
             <Box
+              onClick={() => logoutUser(email)}
               sx={{
                 my: 'auto',
                 color: 'white',
                 display: {
                   xs: 'none',
                   sm: 'flex',
+                  cursor: 'pointer'
                 }
               }}>
               <Box sx={{
                 display: 'flex',
-                cursor: 'pointer',
                 mx: 1,
               }}>
                 <LogoutIcon sx={{ color: (darkMode ? 'white' : 'blue') }} />
@@ -161,7 +234,7 @@ const Sidebar = ({ name, username, profilePicUrl, unreadNotification, unreadMess
                 color: darkMode ? 'white' : 'black',
                 display: { md: 'none', lg: 'block' }
               }}
-                onClick={() => logoutUser(email)}
+
               >Logout</Typography>
             </Box>
           </Tooltip>

@@ -21,8 +21,6 @@ import SocketOperation from '../components/profile/SocketOperation';
 
 const Index = ({ user, postsData = [], errorLoading }) => {
 
-  //POSTSDATA NOT COMING NEED TO FIX IT
-
   const [posts, setPosts] = useState(postsData);
   const [showToastr, setShowToastr] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -111,10 +109,12 @@ const Index = ({ user, postsData = [], errorLoading }) => {
                 sx={{
                   zIndex: 1,
                   my: 1,
-                  position: { xs: 'sticky', md: 'fixed' }, bottom: { md: '2.8rem' },
-                  left: { xs: '42%', sm: '45%', md: '2rem', lg: '3rem' },
+                  position: { xs: 'sticky', md: 'fixed' },
+                  bottom: { md: '2.8rem' },
+                  left: { xs: '42%', sm: '45%', md: '1.5rem', lg: '3rem' },
                   mx: { sm: 'auto', md: 0 },
-                  sizes: { sm: 'small', ms: 'medium', lg: 'large' }
+                  sizes: { sm: 'small', ms: 'medium', lg: 'large' },
+                  transition: 'all 300ms ease-in-out',
                 }}
                 onClick={() => setShowCreatePost(true)}
                 aria-label="add">
@@ -132,7 +132,10 @@ const Index = ({ user, postsData = [], errorLoading }) => {
             {(posts?.length === 0 || errorLoading) ? <NoPosts /> :
               <Container sx={{
                 my: 2,
-                maxWidth: { xs: '100%', sm: '95%', md: '78%', lg: '70%', xl: '65%' }
+                position: 'relative',
+                right:{ sm:0 ,md:'2.5rem'},
+                maxWidth: { xs: '100%', sm: '95%', md: '78%', lg: '63%', xl: '60%' },
+                transition:'all 300ms ease-in-out',
               }} >
                 {getAllPosts}
               </Container>
@@ -140,6 +143,12 @@ const Index = ({ user, postsData = [], errorLoading }) => {
           </SocketOperation>
         </Box>
       </Box>
+
+
+
+
+
+
     </>)
 };
 

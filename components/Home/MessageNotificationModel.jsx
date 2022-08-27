@@ -53,8 +53,8 @@ const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel
     {newMessageModel && (
       <Box sx={{
         minWidth: 'fit-content',
-        height: '18rem',
-        width: { xs: '80%', sm: '18rem', md: '20rem' },
+        // height: '25rem',
+        // width: { xs: '80%', sm: '18rem', md: '20rem' },
       }}>
         <Paper>
 
@@ -69,7 +69,8 @@ const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel
               m: { xs: 0, sm: 0, md: 1 },
               overFlow: 'auto',
               overflowX: 'hidden',
-              maxHeight: '25rem',
+              // maxHeight: '25rem',
+              // height: '100%',
               display: 'grid',
               gridTemplateRows: '1fr 2fr 1fr',
             }}>
@@ -133,11 +134,47 @@ const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel
 
   return <>
     <Backdrop
-      sx={{ color: '#fff', zIndex: 11 }}
+      sx={{
+        color: '#fff',
+        zIndex: 11,
+        display: { xs: 'flex', sm: 'flex', md: 'flex', lg: 'none', xl: 'none', transition: 'all 300ms ease-in-out', }
+      }}
       open={newMessageModel}
     >
       {messageSnackbar}
     </Backdrop>
+
+
+    <Box sx={{
+      zIndex: '5',
+      position: 'absolute',
+      // top: '35vh',
+      // left: '77.5%',
+      display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex', xl: 'flex', }
+    }}>
+      <Box sx={{
+        top: '46vh',
+      left: '77.5%',
+        transition: 'all 300ms ease-in-out',
+        position: 'fixed', p: 1,
+        width: {lg:'18', xl: '20rem' },
+        // maxHeight: '5rem'
+      }}>
+
+        {messageSnackbar}
+      </Box>
+    </Box>
+
+
+
+
+
+
+
+
+
+
+
   </>
 }
 

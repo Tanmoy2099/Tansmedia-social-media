@@ -157,184 +157,184 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
         my: 2,
         maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' }
       }} > */}
-        <Paper>
-          {
-            !post.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> :
-              (post.picUrl && <CardMedia component='img'
-                alt='img post'
-                src={post.picUrl}
-                draggable='false'
-                sx={{ cursor: 'pointer' }}
-                onClick={() => setShowPhotoModal(true)}
-              />
-              )
-          }
-          <CardContent sx={{ display: 'flex' }} >
-            <a onClick={() => router.push(`/${post.user.username}`)} >
+      <Paper>
+        {
+          !post.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> :
+            (post.picUrl && <CardMedia component='img'
+              alt='img post'
+              src={post.picUrl}
+              draggable='false'
+              sx={{ cursor: 'pointer' }}
+              onClick={() => setShowPhotoModal(true)}
+            />
+            )
+        }
+        <CardContent sx={{ display: 'flex' }} >
+          <a onClick={() => router.push(`/${post.user.username}`)} >
 
-              <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content', cursor: 'pointer' }}>
-                {!post.user.profilePicUrl && loading ? <Skeleton variant="circular" width={40} height={40} /> : <ListItemAvatar>
-                  <Avatar alt="profile pic" src={post.user.profilePicUrl} />
-                </ListItemAvatar>}
+            <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content', cursor: 'pointer' }}>
+              {!post.user.profilePicUrl && loading ? <Skeleton variant="circular" width={40} height={40} /> : <ListItemAvatar>
+                <Avatar alt="profile pic" src={post.user.profilePicUrl} />
+              </ListItemAvatar>}
 
-                {!post.user.name && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }}
+              {!post.user.name && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }}
 
-                /> : <ListItemText
-                  sx={{ width: 'fit-content', maxWidth: '10rem' }}
-                  primary={post.user.name}
-                  secondary={
-                    <>
-                      {!post.createdAt && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1.2rem' }} /> : <Typography
-                        sx={{ display: 'block' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        
-                        {calculateTime(post.createdAt)}
-                      </Typography>}
+              /> : <ListItemText
+                sx={{ width: 'fit-content', maxWidth: '10rem' }}
+                primary={post.user.name}
+                secondary={
+                  <>
+                    {!post.createdAt && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1.2rem' }} /> : <Typography
+                      sx={{ display: 'block' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
 
-                      {!post.location && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }} /> : (post.location && <Typography
-                        sx={{ display: 'block' }}
-                        component="span"
-                        variant="body2"
-                        color="text.primary"
-                      >
-                        {post.location}
-                      </Typography>
-                      )}
-                    </>
-                  }
-                />}
-              </ListItem>
-            </a>
-            <Box sx={{ flexGrow: 1 }} />
+                      {calculateTime(post.createdAt)}
+                    </Typography>}
 
-            {(user.role === 'root' || post.user._id === user._id) && (
-              <>
-                <IconButton aria-label="delete"
-                  onClick={(e) => setAnchor(e.currentTarget)}
-                  sx={{ height: 'fit-content', my: 'auto' }}>
-                  <DeleteOutlineIcon />
-                </IconButton>
-
-                <Popover
-                  open={Boolean(anchor)}
-                  anchorEl={anchor}
-                  anchorOrigin={{
-                    vertical: 'center',
-                    horizontal: 'left'
-                  }}
-                  transformOrigin={{
-                    vertical: 'center',
-                    horizontal: 'right'
-                  }}
-                  onClose={() => setAnchor(null)}
-                >
-                  <Box sx={{
-                    padding: '0.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center'
-                  }}>
-                    <Typography component='p' >This action is Irreversible</Typography>
-                    <Button variant='contained'
-                      color='error'
-                      size="small"
-                      sx={{ my: 1, mx: 'auto' }}
-                      onClick={() => deletePost(post._id, setPosts, setShowToastr, setMsg)}
-                    >Delete</Button>
-                  </Box>
-                </Popover>
-
-              </>
-            )}
-
-          </CardContent>
-
-          <Divider display='hidden' />
-
-          <CardContent>
-          {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <Paper elevation1='true' sx={{p:1}}>
-            <h5>Post:</h5>
-              <Typography variant="body2" color="text.primary" sx={{ mx: { lg: 3, md: 2, xs: 1 } }}>
-                {post.text}
-              </Typography>
-            </Paper>}
-          </CardContent>
-
-          <Divider display='hidden' />
-
-
-          <Box sx={{ display: 'flex', m: 1, width: 'fit-content' }}>
-
-            {/* Post likes */}
-            <Box component='span'
-              onClick={() => {
-
-                if (socket.current) {
-                  socket.current.emit('likePost', {
-                    postId: post._id,
-                    userId: user._id,
-                    like: isLiked ? false : true
-                  });
-
-                  socket.current.on('postLiked', () => {
-                    if (isLiked) {
-                      setLikes(prev => prev.filter(like => like.user !== user._id));
-                    } else {
-                      setLikes(prev => [...prev, { user: user._id }]);
-                    }
-                  })
-
-                } else {
-                  likePost(post._id, user._id, setLikes, setMsg, isLiked ? false : true)
+                    {!post.location && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }} /> : (post.location && <Typography
+                      sx={{ display: 'block' }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    >
+                      {post.location}
+                    </Typography>
+                    )}
+                  </>
                 }
-              }}
-              sx={{ cursor: 'pointer' }} >
-              {isLiked ? <FavoriteIcon color='error' /> : <FavoriteBorderIcon sx={{ cursor: 'pointer' }} color='error' />}
-            </Box>
+              />}
+            </ListItem>
+          </a>
+          <Box sx={{ flexGrow: 1 }} />
 
-            {(likes.length > 0) && (
-              <>
-                <LikesList postId={post._id} likes={likes} />
-              </>
-            )}
+          {(user.role === 'root' || post.user._id === user._id) && (
+            <>
+              <IconButton aria-label="delete"
+                onClick={(e) => setAnchor(e.currentTarget)}
+                sx={{ height: 'fit-content', my: 'auto' }}>
+                <DeleteOutlineIcon />
+              </IconButton>
+
+              <Popover
+                open={Boolean(anchor)}
+                anchorEl={anchor}
+                anchorOrigin={{
+                  vertical: 'center',
+                  horizontal: 'left'
+                }}
+                transformOrigin={{
+                  vertical: 'center',
+                  horizontal: 'right'
+                }}
+                onClose={() => setAnchor(null)}
+              >
+                <Box sx={{
+                  padding: '0.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center'
+                }}>
+                  <Typography component='p' >This action is Irreversible</Typography>
+                  <Button variant='contained'
+                    color='error'
+                    size="small"
+                    sx={{ my: 1, mx: 'auto' }}
+                    onClick={() => deletePost(post._id, setPosts, setShowToastr, setMsg)}
+                  >Delete</Button>
+                </Box>
+              </Popover>
+
+            </>
+          )}
+
+        </CardContent>
+
+        <Divider display='hidden' />
+
+        <CardContent>
+          {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <Paper elevation1='true' sx={{ p: 1 }}>
+            <h5>Post:</h5>
+            <Typography variant="body2" color="text.primary" sx={{ mx: { lg: 3, md: 2, xs: 1 } }}>
+              {post.text}
+            </Typography>
+          </Paper>}
+        </CardContent>
+
+        <Divider display='hidden' />
+
+
+        <Box sx={{ display: 'flex', m: 1, width: 'fit-content' }}>
+
+          {/* Post likes */}
+          <Box component='span'
+            onClick={() => {
+
+              if (socket.current) {
+                socket.current.emit('likePost', {
+                  postId: post._id,
+                  userId: user._id,
+                  like: isLiked ? false : true
+                });
+
+                socket.current.on('postLiked', () => {
+                  if (isLiked) {
+                    setLikes(prev => prev.filter(like => like.user !== user._id));
+                  } else {
+                    setLikes(prev => [...prev, { user: user._id }]);
+                  }
+                })
+
+              } else {
+                likePost(post._id, user._id, setLikes, setMsg, isLiked ? false : true)
+              }
+            }}
+            sx={{ cursor: 'pointer' }} >
+            {isLiked ? <FavoriteIcon color='error' /> : <FavoriteBorderIcon sx={{ cursor: 'pointer' }} color='error' />}
           </Box>
 
-          <Typography variant='p' sx={{ fontSize: 12, ml: 1.5 }}>Comments: {comments.length > 0 ? `${comments.length} total` : 'No comment'} </Typography>
-          {
-    !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } }} /> : ((comments?.length > 0) && <CardContent>
-      {comments.map((comment, i) => i < 3 && (
-        <PostComments
-          key={comment._id}
-          comment={comment}
-          postId={post._id}
-          user={user}
-          setComments={setComments}
+          {(likes.length > 0) && (
+            <>
+              <LikesList postId={post._id} likes={likes} />
+            </>
+          )}
+        </Box>
 
-        />
-      ))}
-    </CardContent>
-    )
-  }
+        <Typography variant='p' sx={{ fontSize: 12, ml: 1.5 }}>Comments: {comments.length > 0 ? `${comments.length} total` : 'No comment'} </Typography>
+        {
+          !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } }} /> : ((comments?.length > 0) && <CardContent>
+            {comments.map((comment, i) => i < 3 && (
+              <PostComments
+                key={comment._id}
+                comment={comment}
+                postId={post._id}
+                user={user}
+                setComments={setComments}
 
-  {
-    comments.length > 3 && (
-      <Button variant='outlined' sx={{ color: 'teal', mx: 2, mb: 2 }}
-        onClick={() => setShowCommentModal(true)}
-        size='small'>View more</Button>
-    )
-  }
-  {
-    !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
-      user={user}
-      postId={post._id}
-      socket={socket}
-      setComments={setComments} />
-  }
-        </Paper >
-  {/* </Container> */ }
+              />
+            ))}
+          </CardContent>
+          )
+        }
+
+        {
+          comments.length > 3 && (
+            <Button variant='outlined' sx={{ color: 'teal', mx: 2, mb: 2 }}
+              onClick={() => setShowCommentModal(true)}
+              size='small'>View more</Button>
+          )
+        }
+        {
+          !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
+            user={user}
+            postId={post._id}
+            socket={socket}
+            setComments={setComments} />
+        }
+      </Paper>
+      {/* </Container> */}
 
 
     </>

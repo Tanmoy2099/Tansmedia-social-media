@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import cookie from 'js-cookie';
+import { io } from 'socket.io-client';
+
 import { Avatar, AvatarGroup, Box, Container, Divider, Fab, Paper, Tooltip, Typography } from '@mui/material';
 
-import baseUrl from '../../utils/baseUrl';
+import baseUrl, { pureBaseUrl } from '../../utils/baseUrl';
+import StyledBadge from '../UI/StyledBadge';
 
 const Friendsbar = ({ user }) => {
 
@@ -11,6 +14,27 @@ const Friendsbar = ({ user }) => {
 
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
+
+  const socket = useRef();
+
+
+  useEffect(() => {
+
+    if (!socket.current) { socket.current = io(pureBaseUrl) }
+
+
+    if (socket.current) {
+      socket.current.emit('join', { userId: user._id });
+
+      socket.current.on('connectedUsers', ({ users }) => {
+        users.length > 0 && setConnectedUsers(users);
+      });
+    }
+
+
+  }, []);
+
 
 
   useEffect(() => {
@@ -30,6 +54,8 @@ const Friendsbar = ({ user }) => {
       }
       setLoading(false);
     }
+
+
 
     const getFollowing = async () => {
       setLoading(true);
@@ -55,37 +81,68 @@ const Friendsbar = ({ user }) => {
 
 
 
-  const followersList = followers?.map(({ user: follower }) => (
-    <Tooltip title={follower.name} key={follower._id} >
-      <Avatar
-        size='md'
-        alt={follower.name}
-        src={follower.profilePicUrl} />
-    </Tooltip>
-  ));
+  const followersList = followers?.map(({ user: follower }) => {
 
-  const followingList = following?.map(({ user: following }) => (
-    <Tooltip title={following.name} key={following._id} >
-      <Avatar
-        size='md'
-        alt={following.name}
-        src={following.profilePicUrl} />
+    const isOnline = connectedUsers.filter(user => user.userId === follower._id).length > 0;
+
+
+    return <Tooltip title={follower.name} key={follower._id} >
+      <StyledBadge
+        overlap="circular"
+        invisible={!isOnline}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        variant="dot"
+      >
+        <Avatar
+          size='md'
+          alt={follower.name}
+          src={follower.profilePicUrl} />
+      </StyledBadge>
     </Tooltip>
-  ));
+  });
+
+  const followingList = following?.map(({ user: following }) => {
+
+    const isOnline = connectedUsers.filter(user => user.userId === following._id).length > 0;
+
+    return <Tooltip title={following.name} key={following._id} >
+      <StyledBadge
+        overlap="circular"
+        invisible={!isOnline}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        variant="dot"
+      >
+      <Avatar
+        size='small'
+        alt={following.name}
+          src={following.profilePicUrl} />
+        </StyledBadge>
+    </Tooltip>
+});
 
 
   return (
     (followers.length > 0 || following.length > 0) && (
       <>
         <Box sx={{
-          position: 'absolute',
-          right: { md: '12%', lg: '11%' },
-          top: '8rem',
+          transition: 'all 300ms ease-in-out',
+          // position: 'relative',
+          // right: { md: '12%', lg: '12%' },
+          // top: '8rem',
           display: { xs: 'none', sm: 'none', md: 'flex' },
-        }}>
-          <Paper sx={{ position: 'fixed', p: 1, width: { md: '8rem', lg: '11rem' } }}>
 
-            {followers.length > 0 && <> <Typography sx={{ textAlign: 'center', my: 2 }} >Following you</Typography>
+          overflowX: 'hidden',
+          position: 'absolute',
+          top: '5rem',
+          left: { md: '84%', lg: '79%' },
+        }}>
+          <Paper sx={{
+            position: 'fixed', p: 1,
+            width: { md: '10rem', lg: '17rem' }
+          }}>
+
+            {followers.length > 0 && <>
+              <Typography sx={{ textAlign: 'center', my: 2 }} >Following you</Typography>
 
               <AvatarGroup max={3}
                 sx={{

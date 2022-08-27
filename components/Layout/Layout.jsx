@@ -56,12 +56,15 @@ const Layout = ({ children, user }) => {
     }
   })
 
-
+  const pathlist = ['/messages'];
 
   return <>
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
-      <Box component='main' sx={{ transition: 'all 300ms ease-in-out' }}>
+      <Box component='main' sx={{
+        width: '100%',
+        overFlowX: 'hidden',
+      }}>
         {user ? <>
           <LoggedInNavBar {...user} />
 
@@ -69,18 +72,19 @@ const Layout = ({ children, user }) => {
             display: 'flex',
             minHeight: '40rem',
             position: 'relative',
-            width: '100%',
+
             transition: 'all 300ms ease-in-out',
           }}>
 
             {/* left sidebar */}
-            {(router?.pathname !== '/messages') && <Sidebar {...user} />}
+            {!(pathlist.includes(router?.pathname)) && <Sidebar {...user} />}
 
-              {children}
+            {children}
 
             {/* right sidebar */}
-            {((router?.pathname !== '/messages')) && <Friendsbar user={user} />}
+            {!(pathlist.includes(router?.pathname)) && <Friendsbar user={user} />}
           </Box>
+
 
         </> : <>
 

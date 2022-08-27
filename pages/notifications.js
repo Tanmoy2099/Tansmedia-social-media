@@ -69,7 +69,15 @@ const Notifications = ({ notifications, errorLoading, user, userFollowStats }) =
   return (
     <>
       <SocketOperation user={user} socket={socket}>
-        <Container sx={{ mt: '1.5rem', px: { xs: 0 }, maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' } }}>
+        <Container sx={{
+          mt: '1.5rem',
+          px: { xs: 0 },
+          maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' },
+          position: 'relative',
+          right: { sm: 0, md: '1.8rem' },
+          maxWidth: { xs: '100%', sm: '95%', md: '70%', lg: '60%', xl: '60%' },
+          transition: 'all 300ms ease-in-out',
+        }}>
           {notifications?.length === 0 ? <NoNotifications /> : <>
             <>
               <Box sx={{ minHeight: '40rem', overflow: 'auto', position: 'relative', width: '100%' }}>
