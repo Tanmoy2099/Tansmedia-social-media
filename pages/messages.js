@@ -4,7 +4,7 @@ import { parseCookies } from 'nookies';
 import cookie from 'js-cookie';
 import { useRouter } from 'next/router';
 import { io } from 'socket.io-client';
-import { Box, Container, Drawer, IconButton, Paper, Tooltip } from '@mui/material';
+import { Box, Drawer, IconButton, Paper, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 
@@ -13,7 +13,7 @@ import Message from '../components/Notifications/Messages/Message';
 import baseUrl, { pureBaseUrl } from '../utils/baseUrl';
 import newMsgSound from '../utils/newMsgSound';
 
-import { NoNessages } from '../components/Layout/Nodata';
+// import { NoNessages } from '../components/Layout/Nodata';
 import ChatSenderCard from '../components/Chats/ChatSenderCard';
 import ChatListSearch from '../components/Chats/ChatListSearch';
 import Banner from '../components/Notifications/Messages/Banner';
@@ -21,16 +21,14 @@ import MessageInputField from '../components/UI/MessageInputField';
 
 
 
-
-
-
-const Messages = ({ chatsData, user }) => {
+const Messages = ({ chatsData = [], user }) => {
 
   const router = useRouter();
 
   const socket = useRef();
   const positionRef = useRef();
   //This ref is keeps the state of query string in url throughout re-renders It is the query setion in the url
+
   const openChatId = useRef('');
 
   const [chats, setChats] = useState(chatsData);
@@ -44,13 +42,8 @@ const Messages = ({ chatsData, user }) => {
 
 
 
-console.log(connectedUsers);
+  const scrollDivToBottom = positionRef => positionRef.current !== null && positionRef.current.scrollIntoView({ behaviour: 'smooth' });
 
-
-
-  const scrollDivToBottom = positionRef => {
-    positionRef.current !== null && positionRef.current.scrollIntoView({ behaviour: 'smooth' })
-  };
 
   const setMessageToUnread = async () => {
     await axios.post(`${baseUrl}/chats`, {}, { headers: { Authorization: cookie.get("token") } });
@@ -70,7 +63,6 @@ console.log(connectedUsers);
       socket.current.on('connectedUsers', ({ users }) => {
         users.length > 0 && setConnectedUsers(users);
       });
-
     }
 
     if (chats.length > 0 && !router.query.message) {
@@ -153,6 +145,9 @@ console.log(connectedUsers);
           });
         }
       });
+
+
+
       socket.current.on('newMsgReceived', async ({ newMsg }) => {
 
         let senderName;
@@ -218,7 +213,13 @@ console.log(connectedUsers);
         messageId
       });
     }
+
+    socket.current.on("msgDeleted", () => setMessages(prev => prev.filter(message => message._id !== messageId)));
+
   }
+
+
+
   const deleteChat = async messageswith => {
 
     try {
@@ -235,44 +236,45 @@ console.log(connectedUsers);
   }
 
 
-  const searchChatWindow = <Box sx={{
-    maxWidth: '600px',
-    minWidth: '20rem',
-    height: '100%',
-    overflow: "auto",
-    mt: { xs: 1, sm: 1, ms: 2 }
-  }} >
+  const searchChatWindow = <>
+    <Box sx={{
+      maxWidth: '600px',
+      minWidth: '20rem',
+      height: '100%',
+      overflow: "auto",
+      mt: { xs: 1, sm: 1, ms: 2 }
+    }} >
 
-    <Tooltip title='Search or Create new Chat' arrow>
-      <Box sx={{ display: 'flex' }}>
-        <Box sx={{ flexGrow: 1 }} />
-        <ChatListSearch chats={chats} setChats={setChats} />
-      </Box>
-    </Tooltip>
+      <Tooltip title='Search or Create new Chat' arrow>
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <ChatListSearch chats={chats} setChats={setChats} />
+        </Box>
+      </Tooltip>
 
-    {chats.length > 0 && <Box
-      sx={{ width: '100%', maxHheight: '30rem', overflow: 'auto', my: 2 }}    >
-      {chats?.map((chat, i) => (
-        <ChatSenderCard key={i}
-          chat={chat}
-          connectedUsers={connectedUsers}
-          deleteChat={deleteChat} />
-      ))}
-    </Box>}
-  </Box>
-
+      {chats.length > 0 && <Box
+        sx={{ width: '100%', maxHheight: '30rem', overflow: 'auto', my: 2 }} >
+        {chats?.map((chat, i) => (
+          <ChatSenderCard key={i}
+            chat={chat}
+            connectedUsers={connectedUsers}
+            deleteChat={deleteChat} />
+        ))}
+      </Box>}
+    </Box>
+  </>
 
 
   const msgChatWindow = router.query.message && (
     <Paper
       sx={{
-      m: { xs: 0, sm: 0, md: 2, lg: 3 },
-      flexGrow: 1,
-      overFlow: 'auto',
-      height: '100%',
-      display: 'grid',
-      gridTemplateRows: '1fr 4fr 1fr',
-    }}>
+        m: { xs: 0, sm: 0, md: 2, lg: 3 },
+        flexGrow: 1,
+        overFlow: 'auto',
+        height: '100%',
+        display: 'grid',
+        gridTemplateRows: '1fr 4fr 1fr',
+      }}>
       <Box sx={{ display: 'flex', height: 'fit-content' }}>
         <Box sx={{ flexGrow: 1 }}>
           <Banner bannerData={bannerData} />
@@ -332,31 +334,30 @@ console.log(connectedUsers);
 
   return (
     <>
-
-      <Container sx={{
+      <Box sx={{
         width: '100%',
         mt: 2,
+        mx: 1,
         p: { md: 1, lg: 1 },
-        // minHeight: '30rem'
         height: '80vh'
       }}>
 
         <Box
           sx={{
-          display: {
-            xs: 'flexbox',
-            sm: 'flexbox',
-            md: 'none',
-            lg: 'none',
-            xl: 'none'
-          },
-          width: {
-            xs: '100%',
-            sm: '100%',
-          },
-          height: '100%',
-          mx: 'auto'
-        }}>
+            display: {
+              xs: 'flexbox',
+              sm: 'flexbox',
+              md: 'none',
+              lg: 'none',
+              xl: 'none'
+            },
+            width: {
+              xs: '100%',
+              sm: '100%',
+            },
+            height: '100%',
+            mx: 'auto'
+          }}>
 
           <Drawer
             anchor='left'
@@ -366,9 +367,7 @@ console.log(connectedUsers);
             <Paper sx={{ pt: 6, pb: 2 }}>
               {searchChatWindow}
             </Paper>
-
           </Drawer>
-
 
           {msgChatWindow}
         </Box>
@@ -395,7 +394,7 @@ console.log(connectedUsers);
           {msgChatWindow}
         </Box>
 
-      </Container>
+      </Box>
     </>
   )
 }
@@ -404,7 +403,7 @@ export default Messages;
 
 
 
-Messages.getInitialProps = async (ctx) => {
+export const getServerSideProps = async ctx => {
   try {
     const { token } = parseCookies(ctx);
 
@@ -412,11 +411,12 @@ Messages.getInitialProps = async (ctx) => {
     const header = { headers: { Authorization: token } };
 
     const res = await axios.get(url, header)
-    if (res.data.status !== 'ok') throw res.data.message;
 
-    return { chatsData: res.data.data };
+    if (res.data.status !== 'ok') throw new Error(res.data.message);
 
+    return { props: { chatsData: res.data.data } };
   } catch (error) {
-    return { errorLoading: true };
+    return { props: { errorLoading: true } };
   }
-}
+};
+

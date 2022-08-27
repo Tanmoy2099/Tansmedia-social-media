@@ -21,7 +21,7 @@ const AvatarNameLoader = ({ user, loading }) => {
             <Typography>.</Typography>
           </Skeleton>
         ) : (
-            <Typography component='body2' >
+            <Typography component='body2' sx={{fontSize:'0.8rem'}} >
               {user.name}
             </Typography>
         )}

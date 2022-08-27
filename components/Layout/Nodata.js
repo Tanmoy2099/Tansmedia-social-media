@@ -1,21 +1,24 @@
-import { Alert, AlertTitle, Box, Button } from "@mui/material";
+import { Alert, AlertTitle, Box, Button, Container } from "@mui/material";
 
 
 const alertStructure = (heading = 'Hi!', message = 'Welcome') => <>
+  <Container sx={{mazWidth:'10rem', display:'flex', justifyContent:'center'}}>
   <Alert severity="info" sx={{ mt: 1 }}>
     <AlertTitle>{heading}</AlertTitle>
     {message}
   </Alert>
+  </Container>
 </>;
 
-const buttonStruture = (name = 'button', link = '/') => <Box sx={{ display: 'flex' }}>
-  <Box sx={{ flexGrow: 1 }} />
-  <Button variant="contained" href={link} sx={{ my: 1 }}>
-    {name}
-  </Button>
-  <Box sx={{ flexGrow: 1 }} />
-</Box>
-
+const buttonStruture = (name = 'button', link = '/') => <>
+  <Box sx={{ display: 'flex' }}>
+    <Box sx={{ flexGrow: 1 }} />
+    <Button variant="contained" href={link} sx={{ my: 1 }}>
+      {name}
+    </Button>
+    <Box sx={{ flexGrow: 1 }} />
+  </Box>
+</>;
 
 
 export const NoProfilePosts = () => (

@@ -7,16 +7,18 @@ import { ListItem, ListItemText, Typography, Divider, Box, Paper, Button, ListIt
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 
-
 import baseUrl from '../../utils/baseUrl';
 import { NoFollowData } from '../Layout/Nodata';
 import { followUser, unfollowUser } from '../../utils/profileActions';
 import Loader from '../Layout/CustomLoader/Loader';
+import { useRouter } from 'next/router';
 
-const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId }) => {
 
-  const [followers, setFollowers] = useState([]);
+const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId, setActiveItem }) => {
+
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [followers, setFollowers] = useState([]);
   const [followLoading, setFollowLoading] = useState(false);
 
 
@@ -56,10 +58,13 @@ const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
     const fl = loggedUserFollowStats.following;
     const isFollowing = fl.length > 0 && fl.some(following => following.user === person._id);
 
-    return <Paper key={person._id} sx={{ minWidth: {xs:'100%', md:'49%'}, px: 0 }}>
-      <ListItem sx={{ width:'100%' }}>
-        <Link href={`/${person.username}`}>
-          <>
+    return <Paper key={person._id} sx={{ minWidth: { xs: '100%', md: '49%' }, px: 0, maxWidth: '25rem', my: 1, mr: 0.5 }}>
+      <ListItem sx={{ width: '100%' }}>
+        <Box onClick={() => {
+          router.push(`/${person.username}`);
+          setActiveItem('profile');
+        }}>
+          <a style={{ display: 'flex' }}>
             <ListItemAvatar sx={{ cursor: 'pointer' }}>
               <Avatar alt={person.name} src={person.profilePicUrl} />
             </ListItemAvatar>
@@ -76,8 +81,8 @@ const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
                 </Typography>
               </>}
             />
-          </>
-        </Link>
+          </a>
+        </Box>
         <Box sx={{ flexGrow: 1 }} />
 
         {person._id !== user._id && (
@@ -89,8 +94,8 @@ const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
             disabled={followLoading}>
 
             {followLoading ? <Loader /> : (
-              <Typography sx={{ display: { xs:'none', sm:'flex'}}}>
-              {isFollowing ? 'Following' : 'Follow'}
+              <Typography sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
+                {isFollowing ? 'Following' : 'Follow'}
               </Typography>
             )}
           </Button>
@@ -105,7 +110,9 @@ const Followers = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
     <Box sx={{
       display: 'flex',
       flexWrap: 'wrap',
-      justifyContent: 'space-between'
+      justifyContent: 'center',
+      width: '90%',
+      mx: 'auto',
     }} >
       {displayFollowers}
     </Box>

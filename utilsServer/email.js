@@ -36,16 +36,26 @@ module.exports = class Email {
       html,
     };
 
-    
 
-      // 3) Create a transport and send email
-      await this.newTransport().sendMail(mailOptions);
+
+    // 3) Create a transport and send email
+    await this.newTransport().sendMail(mailOptions);
 
   }
 
 
   async sendWelcome() {
-    await this.send('welcome', `Welcome to ${appName}!`);
+    await this.send('welcome', `Welcome to ${appName()}!`);
+  }
+  async passwordUpdated() {
+    await this.send('Successful!', `Hey,
+    Your password is updated successfully!
+    ${appName()}!`);
+  }
+  async profileUpdated() {
+    await this.send('Successful!', `Hey,
+    Your profile data is updated successfully!
+    ${appName()}!`);
   }
 
   async sendResetPasswordMail() {

@@ -1,4 +1,4 @@
-import { Avatar, Box, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
+import { Avatar, Box, Divider, ListItem, ListItemAvatar, ListItemText, Paper } from '@mui/material';
 import React from 'react';
 
 
@@ -21,6 +21,7 @@ const Banner = ({ bannerData }) => {
         />
       </ListItem>
     </Paper>
+    <Divider />
   </>
 }
 

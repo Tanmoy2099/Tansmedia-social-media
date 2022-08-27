@@ -50,7 +50,7 @@ const ProfileHeader = ({ profile, ownAccount, loggedUserFollowStats, setUserFoll
                     textTransform: 'none'
                   }}>
                   {loading ? <>
-                    <CircularProgress size='100%' />
+                    <CircularProgress size='1.5rem' />
                   </> : (
                     isFollowing ? <>
                       <TaskAltIcon sx={{ mr: 0.5 }} /> {'Following'}

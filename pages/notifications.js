@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { parseCookies } from 'nookies';
 import cookie from 'js-cookie';
-import { Box, Container, Paper } from '@mui/material';
+import { io } from 'socket.io-client';
+import { Box, Container } from '@mui/material';
 
-import baseUrl from '../utils/baseUrl';
+import baseUrl, { pureBaseUrl } from '../utils/baseUrl';
 import { NoNotifications } from '../components/Layout/Nodata';
 
 import { useDispatch } from 'react-redux';
@@ -15,6 +16,7 @@ import FollowerNotification from '../components/Notifications/FollowerNotificati
 
 import { utilityActions } from '../Store/Utility-slice';
 
+import SocketOperation from '../components/profile/SocketOperation';
 
 const Notifications = ({ notifications, errorLoading, user, userFollowStats }) => {
 
@@ -22,8 +24,16 @@ const Notifications = ({ notifications, errorLoading, user, userFollowStats }) =
     return <NoNotifications />;
   }
 
+  const socket = useRef();
+
   const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats);
   const dispatch = useDispatch();
+
+
+
+
+
+
 
   useEffect(() => {
     dispatch(utilityActions.setNotification(notifications))
@@ -58,34 +68,36 @@ const Notifications = ({ notifications, errorLoading, user, userFollowStats }) =
 
   return (
     <>
-      <Container sx={{ mt: '1.5rem', px: { xs: 0 }, maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' } }}>
-        {notifications?.length === 0 ? <NoNotifications /> : <>
-          <>
-            <Box sx={{ minHeight: '40rem', overflow: 'auto', position: 'relative', width: '100%' }}>
+      <SocketOperation user={user} socket={socket}>
+        <Container sx={{ mt: '1.5rem', px: { xs: 0 }, maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' } }}>
+          {notifications?.length === 0 ? <NoNotifications /> : <>
+            <>
+              <Box sx={{ minHeight: '40rem', overflow: 'auto', position: 'relative', width: '100%' }}>
 
-              <Box>
-                {notifications.map(notification => (
-                  <Box key={notification._id}>
-                    {notification.type === "newLike" && notification.post !== null && <LikeNotification notification={notification} />}
+                <Box>
+                  {notifications.map(notification => (
+                    <Box key={notification._id}>
+                      {notification.type === "newLike" && notification.post !== null && <LikeNotification notification={notification} />}
 
-                    {notification.type === "newComment" &&
-                      notification.post !== null && <CommentNotification notification={notification} />}
+                      {notification.type === "newComment" &&
+                        notification.post !== null && <CommentNotification notification={notification} />}
 
-                    {notification?.type === "newFollower" && (
-                      <FollowerNotification
-                        notification={notification}
-                        loggedUserFollowStats={loggedUserFollowStats}
-                        setUserFollowStats={setUserFollowStats}
-                      />
-                    )}
-                  </Box>
-                ))}
+                      {notification?.type === "newFollower" && (
+                        <FollowerNotification
+                          notification={notification}
+                          loggedUserFollowStats={loggedUserFollowStats}
+                          setUserFollowStats={setUserFollowStats}
+                        />
+                      )}
+                    </Box>
+                  ))}
+                </Box>
+
               </Box>
-
-            </Box>
-          </>
-        </>}
-      </Container>
+            </>
+          </>}
+        </Container>
+      </SocketOperation>
     </>
   )
 }
@@ -94,21 +106,42 @@ export default Notifications;
 
 
 
-
-
-Notifications.getInitialProps = async (ctx) => {
-  const { token } = parseCookies(ctx);
-
-  const url = `${baseUrl}/notifications`;
-  const header = { headers: { Authorization: token } };
+export const getServerSideProps = async ctx => {
   try {
+    const { token } = parseCookies(ctx);
+
+    const url = `${baseUrl}/notifications`;
+    const header = { headers: { Authorization: token } };
 
     const res = await axios.get(url, header);
     if (res.data.status !== 'ok') throw new Error(res.data.message);
 
-    return { notifications: res.data.data }
 
+    return { props: { notifications: res.data.data } };
   } catch (error) {
-    return { errorLoading: true }
+    return { props: { errorLoading: true } };
   }
-}
+};
+
+
+
+
+
+// Notifications.getInitialProps = async (ctx) => {
+//   const { token } = parseCookies(ctx);
+
+//   const url = `${baseUrl}/notifications`;
+//   const header = { headers: { Authorization: token } };
+//   try {
+
+//     const res = await axios.get(url, header);
+//     if (res.data.status !== 'ok') throw new Error(res.data.message);
+
+//     return { notifications: res.data.data }
+
+//   } catch (error) {
+//     return { errorLoading: true }
+//   }
+// }
+
+

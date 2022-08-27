@@ -1,9 +1,9 @@
 
 import { useEffect } from 'react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import nProgress from 'nprogress';
 
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { grey } from '@mui/material/colors';
@@ -14,6 +14,8 @@ import Navbar from './Navbar';
 import Footer from './Footer/Footer';
 import LoggedInNavBar from './LoggedInNavBar';
 import { utilityActions } from '../../Store/Utility-slice';
+import Sidebar from '../Sidebar/Sidebar';
+import Friendsbar from './Friendsbar';
 
 const Layout = ({ children, user }) => {
 
@@ -21,10 +23,12 @@ const Layout = ({ children, user }) => {
   Router.onRouteChangeComplete = () => nProgress.done();
   Router.onRouteChangeError = () => nProgress.done();
 
+  const router = useRouter();
+
   const dispatch = useDispatch();
   const { darkMode } = useSelector(state => state.utility);
 
-  
+
   useEffect(() => {
     const mode = JSON.parse(localStorage.getItem("mode"));
     if (!mode) {
@@ -53,6 +57,7 @@ const Layout = ({ children, user }) => {
   })
 
 
+
   return <>
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
@@ -61,12 +66,20 @@ const Layout = ({ children, user }) => {
           <LoggedInNavBar {...user} />
 
           <Box sx={{
+            display: 'flex',
             minHeight: '40rem',
             position: 'relative',
-            maxWidth: '100%',
-            transition: 'all 300ms ease-in-out'
+            width: '100%',
+            transition: 'all 300ms ease-in-out',
           }}>
-            {children}
+
+            {/* left sidebar */}
+            {(router?.pathname !== '/messages') && <Sidebar {...user} />}
+
+              {children}
+
+            {/* right sidebar */}
+            {((router?.pathname !== '/messages')) && <Friendsbar user={user} />}
           </Box>
 
         </> : <>

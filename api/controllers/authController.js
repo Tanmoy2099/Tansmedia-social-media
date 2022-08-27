@@ -79,6 +79,10 @@ exports.signup = catchAsync(async (req, res, next) => {
   await NotificationModel.create({ user: newUser._id, notification: [] });
   await ChatModel.create({ user: newUser._id, chats: [] });
 
+
+  await new Email(newUser).sendWelcome();
+
+
   const id = newUser._id;
 
   createSendToken(id, res, 201);
@@ -181,6 +185,9 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
     runValidators: true
   });
 
+  await new Email(user).profileUpdated();
+
+
   res.status(200).json({
     status: 'ok',
     data: user
@@ -202,6 +209,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   user.password = password;
   await user.save();
+
+  await new Email(user).passwordUpdated();
 
   createSendToken(userId, res, 201);
 });

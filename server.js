@@ -2,6 +2,8 @@ const express = require('express');
 const next = require('next');
 
 
+const mongoSanitize = require('express-mongo-sanitize');
+
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
 
@@ -19,14 +21,15 @@ const io = new Server(httpServer, {
 });
 
 
+
 const authRouter = require('./api/router/authRouter');
 const chatRouter = require('./api/router/chatRouter');
 const postRouter = require('./api/router/postRouter');
 const searchRouter = require('./api/router/searchRouter');
 const profileRouter = require('./api/router/profileRouter');
+const globleError = require('./api/controllers/errorController');
 const notificationsRouter = require('./api/router/notificationsRouter');
 
-const globleError = require('./api/controllers/errorController');
 
 const handle = nextApp.getRequestHandler();
 require('dotenv').config({ path: './config.env' });
@@ -56,8 +59,8 @@ process.on('uncaughtException', error => {
   unHandledCrash({ error, name: error.name, message: error.message });
 });
 
-
-
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
 
 
 
@@ -101,14 +104,13 @@ io.on('connection', socket => {
   })
 
 
-
   socket.on('sendMsgFromNotification', async (values) => {
     await sendNewMsgOrMSgNotification(values);
   })
 
 
   socket.on('deleteMsg', async ({ userId, messagesWith, messageId }) => {
-    const { success } = await deleteMsg(userId, messagesWith, messageId);
+    const success = await deleteMsg(userId, messagesWith, messageId);
 
     if (success) {
       socket.emit('msgDeleted');
@@ -146,7 +148,7 @@ io.on('connection', socket => {
     const { success, name, profilePicUrl, username, postOwnerId, newComment, error } = await newCommentNotification(text, postId, commentingUserId)
 
     if (success) {
-      socket.emit('newCommentAdded', {newComment})
+      socket.emit('newCommentAdded', { newComment })
 
       if (postOwnerId !== commentingUserId) {
         const receiverSocket = findConnectedUser(postOwnerId);

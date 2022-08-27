@@ -5,7 +5,10 @@ import Link from 'next/link';
 import { AppBar, Box, Toolbar, IconButton, Typography, Badge, MenuItem, Menu, Avatar, Tooltip } from '@mui/material';
 
 import MailIcon from '@mui/icons-material/Mail';
+import DraftsIcon from '@mui/icons-material/Drafts';
+
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 import appName from '../../utilsServer/appName';
 import { logoutUser } from '../../utils/authUser';
@@ -17,9 +20,12 @@ import ToggleButton from '../UI/toggleButton';
 import SearchArea from './SearchArea';
 
 import Searchbar from '../UI/Searchbar';
+import { useRouter } from 'next/router';
 
 
 export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNotification, unreadMessage, email }) {
+
+  const router = useRouter();
 
   const dispatch = useDispatch();
   const { search, utility } = useSelector(state => state);
@@ -76,9 +82,6 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
         <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       </Link>
 
-      <Link href='/account' >
-        <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      </Link>
 
       <MenuItem onClick={() => {
         handleMenuClose();
@@ -105,22 +108,25 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
 
       sx={{ zIndex: 10, ...lightNav }} >
       <Toolbar>
-        <Link href='/' >
-          <Tooltip title='Home' arrow>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                fontSize: { xs: '1rem', sm: '1.2rem' },
-                cursor: 'pointer'
-              }}>
+        <Tooltip title='Home' arrow>
+          <Typography
+            variant="h6"
+            noWrap
+            onClick={() => router.push('/')}
+            component="div"
+            sx={{
+              fontSize: { xs: '1rem', sm: '1.2rem' },
+              cursor: 'pointer',
+              color: 'white',
+              textDecoration: 'none',
+            }}>
 
+            <a>
               {appName()}
+            </a>
 
-            </Typography>
-          </Tooltip>
-        </Link>
+          </Typography>
+        </Tooltip>
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -146,7 +152,8 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
           <Tooltip title='Message' arrow>
             <Box
               component='a'
-              href='/messages'
+              onClick={() => router.push('/messages')}
+              // href='/messages'
               sx={{
                 color: 'white',
                 my: 'auto',
@@ -157,12 +164,12 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
               }}>
               <Box component='span' >
 
-                <Badge color={darkMode ? 'warning' : 'success'}
+                <Badge color={darkMode ? 'warning' : 'error'}
                   variant="dot"
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
-                  <MailIcon color={unreadMessage ? (darkMode ? 'warning' : 'success') : 'white'} />
+                  {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color={darkMode ? 'white' : 'success'} />}
                 </Badge>
 
               </Box>
@@ -173,7 +180,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
           <Tooltip title='Notification' arrow>
             <Box
               component='a'
-              href='/notifications'
+              onClick={() => router.push('/notifications')}
               sx={{
                 my: 'auto',
                 color: 'white',
@@ -184,7 +191,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
               }}>
               <Box variant='span' >
 
-                <Badge color={darkMode ? 'warning' : 'success'}
+                <Badge color={darkMode ? 'warning' : 'error'}
                   sx={badgeStyle}
                   variant="dot"
                   invisible={!unreadNotification}

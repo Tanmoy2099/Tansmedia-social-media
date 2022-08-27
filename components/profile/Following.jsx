@@ -3,6 +3,8 @@ import Link from 'next/link';
 import cookie from 'js-cookie';
 import axios from 'axios';
 
+import { useRouter } from 'next/router';
+
 import { ListItem, ListItemText, Typography, Divider, Box, Paper, Button, ListItemAvatar, Avatar } from '@mui/material';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
@@ -13,7 +15,9 @@ import { NoFollowData } from '../Layout/Nodata';
 import Loader from '../Layout/CustomLoader/Loader';
 import { followUser, unfollowUser } from '../../utils/profileActions';
 
-const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId }) => {
+const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUserId, setActiveItem }) => {
+
+  const router = useRouter();
 
   const [following, setFollowing] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -56,10 +60,13 @@ const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
     const isFollowing = fling.length > 0 && fling.filter(samePerson => samePerson.user === person._id).length > 0;
 
 
-    return <Paper key={person._id} sx={{ minWidth: { xs: '100%', md: '49%' }, px: 0 }}>
+    return <Paper key={person._id} sx={{ minWidth: { xs: '100%', md: '49%' }, px: 0, maxWidth: '25rem', my: 1, mr: 0.5 }}>
       <ListItem sx={{ width: '100%' }}>
-        <Link href={'/' + person.username}>
-          <>
+        <Box onClick={() => {
+          router.push(`/${person.username}`);
+          setActiveItem('profile');
+        }}>
+          <a style={{ display: 'flex' }}>
             <ListItemAvatar sx={{ cursor: 'pointer' }}>
               <Avatar alt={person.name} src={person.profilePicUrl} />
             </ListItemAvatar>
@@ -76,8 +83,8 @@ const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
                 </Typography>
               </>}
             />
-          </>
-        </Link>
+          </a>
+        </Box>
         <Box sx={{ flexGrow: 1 }} />
 
         {person._id !== user._id && (
@@ -89,7 +96,7 @@ const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
             disabled={followLoading}>
 
             {followLoading ? <Loader /> : (
-              <Typography sx={{ display: { xs: 'none', sm: 'flex' } }}>
+              <Typography sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Typography>
             )}
@@ -106,7 +113,9 @@ const Following = ({ user, loggedUserFollowStats, setUserFollowStats, profileUse
     <Box sx={{
       display: 'flex',
       flexWrap: 'wrap',
-      justifyContent: 'space-between'
+      justifyContent: 'center',
+      width: '90%',
+      mx: 'auto',
     }} >
       {displayFollowing}
     </Box>

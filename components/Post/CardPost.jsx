@@ -1,10 +1,12 @@
 
 import { useState } from 'react';
-import Link from 'next/link';
+// import Link from 'next/link';
+
+import { useRouter } from 'next/router';
 
 import {
   Avatar, Box, Button, CardContent, CardMedia, IconButton, ListItem,
-  ListItemAvatar, ListItemText, Popover, Typography, Divider, Backdrop, Paper, Skeleton, Container
+  ListItemAvatar, ListItemText, Popover, Typography, Divider, Backdrop, Paper, Skeleton
 } from '@mui/material';
 
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -24,6 +26,8 @@ import { likePost, deletePost } from '../../utils/postActions';
 
 
 const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
+
+  const router = useRouter();
 
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
@@ -149,7 +153,10 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
       <ShowModal modalBoolean={showPhotoModal} setModalBoolean={setShowPhotoModal} Modal={ImageModal} setOtherModal={setShowCommentModal} />
       <ShowModal modalBoolean={showCommentModal} setModalBoolean={setShowCommentModal} Modal={OnlyComment} setOtherModal={setShowPhotoModal} />
 
-      <Container sx={{ my: 2, maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' } }} >
+      {/* <Container sx={{
+        my: 2,
+        maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' }
+      }} > */}
         <Paper>
           {
             !post.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> :
@@ -163,8 +170,9 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
               )
           }
           <CardContent sx={{ display: 'flex' }} >
-            <Link href={`/${post.user.username}`} >
-              <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content' }}>
+            <a onClick={() => router.push(`/${post.user.username}`)} >
+
+              <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content', cursor: 'pointer' }}>
                 {!post.user.profilePicUrl && loading ? <Skeleton variant="circular" width={40} height={40} /> : <ListItemAvatar>
                   <Avatar alt="profile pic" src={post.user.profilePicUrl} />
                 </ListItemAvatar>}
@@ -182,6 +190,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
                         variant="body2"
                         color="text.primary"
                       >
+                        
                         {calculateTime(post.createdAt)}
                       </Typography>}
 
@@ -198,7 +207,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
                   }
                 />}
               </ListItem>
-            </Link>
+            </a>
             <Box sx={{ flexGrow: 1 }} />
 
             {(user.role === 'root' || post.user._id === user._id) && (
@@ -241,16 +250,17 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
               </>
             )}
 
-
           </CardContent>
 
           <Divider display='hidden' />
 
           <CardContent>
-            {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <><h5>Post:</h5>
+          {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <Paper elevation1='true' sx={{p:1}}>
+            <h5>Post:</h5>
               <Typography variant="body2" color="text.primary" sx={{ mx: { lg: 3, md: 2, xs: 1 } }}>
                 {post.text}
-              </Typography></>}
+              </Typography>
+            </Paper>}
           </CardContent>
 
           <Divider display='hidden' />
@@ -293,33 +303,38 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
           </Box>
 
           <Typography variant='p' sx={{ fontSize: 12, ml: 1.5 }}>Comments: {comments.length > 0 ? `${comments.length} total` : 'No comment'} </Typography>
-          {!post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } }} /> : ((comments?.length > 0) && <CardContent>
-            {comments.map((comment, i) => i < 3 && (
-              <PostComments
-                key={comment._id}
-                comment={comment}
-                postId={post._id}
-                user={user}
-                setComments={setComments}
+          {
+    !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } }} /> : ((comments?.length > 0) && <CardContent>
+      {comments.map((comment, i) => i < 3 && (
+        <PostComments
+          key={comment._id}
+          comment={comment}
+          postId={post._id}
+          user={user}
+          setComments={setComments}
 
-              />
-            ))}
-          </CardContent>
-          )}
+        />
+      ))}
+    </CardContent>
+    )
+  }
 
-          {comments.length > 3 && (
-            <Button variant='outlined' sx={{ color: 'teal', mx: 2, mb: 2 }}
-              onClick={() => setShowCommentModal(true)}
-              size='small'>View more</Button>
-          )}
-          {!post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
-            user={user}
-            postId={post._id}
-            socket={socket}
-            setComments={setComments} />
-          }
-        </Paper>
-      </Container>
+  {
+    comments.length > 3 && (
+      <Button variant='outlined' sx={{ color: 'teal', mx: 2, mb: 2 }}
+        onClick={() => setShowCommentModal(true)}
+        size='small'>View more</Button>
+    )
+  }
+  {
+    !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
+      user={user}
+      postId={post._id}
+      socket={socket}
+      setComments={setComments} />
+  }
+        </Paper >
+  {/* </Container> */ }
 
 
     </>

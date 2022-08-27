@@ -4,8 +4,8 @@ import React from 'react'
 const Loader = (props) => {
   return (
     <>
-      <Container fullwidth='lg' sx={{ display: 'flex', justifyContent: 'enter' }}>
-        <CircularProgress sx={{ mx: 'auto' }} {...props} />
+      <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+        <CircularProgress sx={{ mx: 'auto', ...props }}  />
       </Container>
     </>
   )

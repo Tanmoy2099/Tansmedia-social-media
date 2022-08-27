@@ -101,7 +101,7 @@ const UpdateProfile = ({ profile }) => {
       </Backdrop>
 
 
-      <Paper sx={{ maxWidth: 'lg', p: 1 }}>
+      <Box sx={{ p: 1 }}>
         <Snackbar open={msg.hasMsg} autoHideDuration={15000} onClose={removeAlertMsg}>
           <Alert
             sx={{ width: '100%', fontSize: '1.2rem' }}
@@ -113,8 +113,12 @@ const UpdateProfile = ({ profile }) => {
           </Alert>
         </Snackbar>
 
-        <Box component='form' onSubmit={handleSubmit} sx={{ mx: 'auto', width: { xs: '100%', sm: '75%', md: '60%' } }}>
-
+        <Box component='form' onSubmit={handleSubmit}
+          sx={{
+            mx: 'auto',
+            width: { xs: '100%', sm: '90%', md: '60%' },
+            height: { sm: '30rem' },
+          }}>
 
 
 
@@ -172,7 +176,7 @@ const UpdateProfile = ({ profile }) => {
           </Button>
 
         </Box>
-      </Paper>
+      </Box>
     </>
   )
 }

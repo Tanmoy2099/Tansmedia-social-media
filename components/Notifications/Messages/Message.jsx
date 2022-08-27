@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import { Popover, Typography, Button, Box, IconButton, Avatar } from '@mui/material';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { Popover, Typography, Button, Box, Avatar } from '@mui/material';
 import calculateTime from '../../../utils/calculateTime';
 
 

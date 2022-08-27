@@ -33,7 +33,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   let pageProps = {};
 
 
-  const loggedPaths = ['/', '/[username]', '/notifications', '/posts/[postId]', '/messages']
+  const loggedPaths = ['/', '/[username]', '/notifications', '/posts/[postId]', '/messages'];
   const protectedRoutes = loggedPaths.includes(ctx.pathname);
 
 

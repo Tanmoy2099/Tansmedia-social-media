@@ -297,7 +297,7 @@ const Settings = ({ newMessagePopup }) => {
 
 
   return (
-    <Paper>
+    <Paper sx={{maxWidth:'45rem', mx:'auto', px:1}}>
       <SnackBarMsg msg={msg} setMsg={setMsg} />
 
 
@@ -325,6 +325,7 @@ const Settings = ({ newMessagePopup }) => {
         {passwordUpdateForm}
       </Box>}
       {/* -------------------------------------------------------------- */}
+      <Divider sx={{ my: 1.5 }} />
 
       <List>
         <Typography component='h2'

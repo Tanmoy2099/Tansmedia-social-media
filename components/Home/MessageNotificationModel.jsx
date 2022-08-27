@@ -1,31 +1,37 @@
 import { useState } from 'react'
 import Link from 'next/link';
-import { Badge, Box, IconButton, Paper } from '@mui/material';
+import { AppBar, Backdrop, Badge, Box, IconButton, Paper, Snackbar, Typography } from '@mui/material';
 import Banner from '../Notifications/Messages/Banner';
-import Message from '../Notifications/Messages/Message';
+// import Message from '../Notifications/Messages/Message';
 import MessageInputField from '../UI/MessageInputField';
 
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import calculateTime from '../../utils/calculateTime';
+
+import CloseIcon from '@mui/icons-material/Close';
 
 
-const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel, user }) => {
+
+
+
+
+const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel, user, newMessageReceived }) => {
 
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [show, setShow] = useState(false);
 
-  const onModalClose = () => showNewMessageModel(false);
+
+  const onClose = () => showNewMessageModel(false);
 
   const bannerData = {
-    name: user.name,
-    profilePiUrl: user.profilePiUrl
+    name: newMessageReceived.senderName,
+    profilePicUrl: newMessageReceived.senderProfilePicUrl
   }
+
 
 
   const handleSubmit = async e => {
     e.preventDefault();
-
+    setLoading(true)
     if (socket.current) {
       socket.current.emit('sendMsgFromNotification', {
         userId: user._id,
@@ -35,93 +41,104 @@ const MessageNotificationModel = ({ socket, showNewMessageModel, newMessageModel
 
       socket.current.on('msgSentFromNotification', () => {
         showNewMessageModel(false)
+
+        setLoading(false)
       })
 
     }
 
   };
 
-
-  return <>
-    {newMessageModel && <Paper sx={{
-      position: 'absolute',
-      bottom: 0,
-      right: { xs: 0, sm: 0, md: 5 },
-      height: { sm: '80vh', md: '30rem' }
-    }}>
-
-
+  const messageSnackbar = <>
+    {newMessageModel && (
       <Box sx={{
-        width: { xs: '100%', sm: '100%', md: '25rem' },
-        position: 'relative'
-      }} >
-        <Badge variant='dot'>
-          <IconButton sx={{
-            position: 'absolute',
-            width: '5%',
-            top: 0,
-            right: '45%'
-          }}
-            onClick={() => setShow(prev => !prev)}
-          >
-            {show ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
-          </IconButton>
-        </Badge>
+        minWidth: 'fit-content',
+        height: '18rem',
+        width: { xs: '80%', sm: '18rem', md: '20rem' },
+      }}>
+        <Paper>
 
-        {/* MESSAGE WINDOW */}
-        {show && <Paper sx={{
-          m: { xs: 0, sm: 0, md: 1 },
-          minWidth: '100%',
-          // position: 'relative',
-          overFlow: 'auto',
-          overflowX: 'hidden',
-          maxHeight: '35rem',
-          display: 'grid',
-          gridTemplateRows: '1fr 4fr 1fr',
-        }}>
+          <Box sx={{ position: 'relative' }} >
 
-          <Box >
-            <p>New Message</p>
-            <Banner bannerData={bannerData} />
+
+
+
+            {/* MESSAGE WINDOW */}
+            {/* {show && */}
+            <Box sx={{
+              m: { xs: 0, sm: 0, md: 1 },
+              overFlow: 'auto',
+              overflowX: 'hidden',
+              maxHeight: '25rem',
+              display: 'grid',
+              gridTemplateRows: '1fr 2fr 1fr',
+            }}>
+
+              <Paper sx={{ position: 'relative' }}>
+
+                <IconButton aria-label="close button"
+                  size='small'
+                  sx={{ width: 'fit-content', position: 'absolute' }}
+                  onClick={onClose}>
+                  <CloseIcon />
+                </IconButton>
+
+                <Typography sx={{ textAlign: 'center', mt: 1 }}>New Message</Typography>
+                <Banner bannerData={bannerData} />
+              </Paper>
+
+              <Box>
+                <div className='bubbleWrapper'>
+
+                  <div className={'inlineContainer'} >
+
+                    <div className={'otherBubble other'}> {newMessageReceived.msg} </div>
+
+                  </div>
+
+                  <span className={'other'}> {calculateTime(newMessageReceived.date)} </span>
+
+                </div>
+              </Box>
+              <Box >
+                <MessageInputField
+                  text={text}
+                  setText={setText}
+                  loading={loading}
+                  handleSubmit={handleSubmit}
+                />
+              </Box>
+
+              <Box sx={{ my: 0.5 }}>
+                <Link href={`/messages?message=${newMessageReceived.sender}`} >
+                  <Typography sx={{ textAlign: 'center', cursor: 'pointer', '&:hover': { color: 'yellow' } }} >
+                    <a>
+                      View All messages
+                    </a>
+                  </Typography>
+                </Link>
+                <Typography sx={{ textAlign: 'center', fontSize: '0.8rem' }} >
+                  You can turn off message popup from the settings
+                </Typography>
+              </Box>
+            </Box>
+            {/* } */}
+
           </Box>
-
-
-          <Box>
-            {messages.length > 0 && (
-              <>
-                {messages.map((message, i) => (
-                  <Message
-                    positionRef={positionRef}
-                    key={i}
-                    bannerProfilePic={bannerData.profilePicUrl}
-                    message={message}
-                    user={user}
-                    deleteMsg={deleteMsg}
-                  />
-                ))}
-              </>
-            )}
-          </Box>
-          <Box >
-            <MessageInputField
-              text={text}
-              setText={setText}
-              loading={loading}
-              handleSubmit={handleSubmit}
-            />
-          </Box>
-
-          <Box sx={{ mt: 0.5 }}>
-            <Link href={`/messages?message=${newMessageReceived.sender}`} />
-          </Box>
-        </Paper>}
-
+        </Paper>
       </Box>
-    </Paper>
-
-}
+    )}
   </>
 
+
+  return <>
+    <Backdrop
+      sx={{ color: '#fff', zIndex: 11 }}
+      open={newMessageModel}
+    >
+      {messageSnackbar}
+    </Backdrop>
+  </>
 }
 
 export default MessageNotificationModel;

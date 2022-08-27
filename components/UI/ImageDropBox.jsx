@@ -39,12 +39,31 @@ const ImageDropBox = ({
     </Box>
 
   ) : (
-    <Box sx={{ ...(highlighted && { color: "green" }), textAlign: "center", fontSize: '1.5rem', width: { xs: '100%', sm: '80%', md: '60%' }, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', objectFit: 'contain', mx: 'auto' }}>
+    <Box sx={{
+      ...(highlighted && { color: "green" }),
+      textAlign: "center",
+      fontSize: '1.5rem',
+      // width: { xs: '100%', sm: '80%', md: '60%' },
+      width: 'fit-content',
+      display: 'flex',
+      flexDirection: 'column',
+      // justifyContent: 'center',
+      // alignItems: 'center',
+      objectFit: 'contain',
+      mx: 'auto',
+    }}>
 
       <Box component='img'
         src={profilePicUrl}
         alt="Profile pic"
-        sx={{ cursor: "pointer", margin: 'auto', maxWidth: '100%', maxHeight: '98%', objectFit: 'contain' }}
+        sx={{
+          m: 'auto',
+          cursor: "pointer",
+          maxHeight: '30rem',
+          maxWidth: '25rem',
+          width: '100%',
+          height: '100%',
+        }}
         onClick={() => inputRef.current.click()}
       />
       {dragNdrop}
@@ -92,7 +111,7 @@ const ImageDropBox = ({
               <Box component='img'
                 src={mediaPreview}
                 alt="Profile pic"
-                sx={{ cursor: "pointer", width: '100%', height: '100%' }}
+                sx={{ cursor: "pointer", width: '100%', height: '100%', maxHeight: '30rem', maxWidth: '25rem' }}
                 onClick={() => inputRef.current.click()}
               />
             </Box>

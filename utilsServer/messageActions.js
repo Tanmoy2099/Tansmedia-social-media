@@ -1,3 +1,4 @@
+const { trusted } = require("mongoose");
 const ChatModel = require("../models/ChatModel");
 const UserModel = require("../models/UserModel");
 
@@ -110,9 +111,11 @@ const deleteMsg = async (userId, messagesWith, messageId) => {
 
     await user.save();
 
-    return { success: true };
+    // return { success: true };
+    return true
   } catch (error) {
     console.log(error);
+    return false
   }
 };
 

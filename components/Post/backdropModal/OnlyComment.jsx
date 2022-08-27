@@ -40,7 +40,7 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
           position: 'relative',
           overFlow: 'auto',
           py: 1,
-          px:0.5
+          px: 0.5
         }} >
           <Link href={`/${post.user.username}`} >
             <Box sx={{ display: { sm: 'flex', md: 'block' } }}>
@@ -106,12 +106,15 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
               }} >
               {isLiked ? <FavoriteIcon color='error'
                 sx={{
-                  height: '2rem',
-                  width: '2rem'
-                }} /> : <FavoriteBorderIcon sx={{
-                  cursor: 'pointer', height: '2rem',
-                  width: '2rem'
-                }} color='error' />}
+                  height: '1.4rem',
+                  width: '1.4rem'
+                }}
+
+              /> : <FavoriteBorderIcon sx={{
+                cursor: 'pointer',
+                height: '1.4rem',
+                width: '1.4rem'
+              }} color='error' />}
             </Box>
 
             {(likes.length > 0) && (

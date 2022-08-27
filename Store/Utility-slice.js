@@ -2,13 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   notification: [],
-  darkMode: true
+  darkMode: false
 };
 
 const utilitySlice = createSlice({
   name: 'utility',
   initialState,
-  
+
   reducers: {
     setNotification(state, action) {
       state.notification = action.payload;

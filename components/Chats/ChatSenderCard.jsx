@@ -7,9 +7,8 @@ import { useRouter } from "next/router";
 import calculateTime from "../../utils/calculateTime";
 
 
-
 const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
-  const [anchor, setAnchor] = useState(null);
+  const [anchor, setAnchor] = useState(false);
   const router = useRouter();
 
   const isOnline = connectedUsers.length > 0 && connectedUsers.filter(user => user.userId === chat.messagesWith).length > 0;
@@ -25,12 +24,12 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
       open={Boolean(anchor)}
       anchorEl={anchor}
       anchorOrigin={{
-        vertical: 'center',
+        vertical: 10,
         horizontal: 'left'
       }}
       transformOrigin={{
-        vertical: 'center',
-        horizontal: 'right'
+        vertical: 50,
+        horizontal: 10
       }}
       onClose={() => setAnchor(null)}
     >
@@ -40,7 +39,7 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
         flexDirection: 'column',
         justifyContent: 'center'
       }}>
-        <Typography component='p' >Delete chat</Typography>
+        <h6>Delete chat</h6>
         <Button variant='contained'
           color='error'
           size="small"
@@ -54,14 +53,11 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
 
 
 
-
-
-
   const badgeStyle = { cursor: 'pointer', height: 'fit-content', m: 'auto', fontSize: '25' };
 
 
   return (
-    <Paper sx={{}}>
+    <Paper >
       <List sx={{
         maxWidth: '25rem',
         color: 'white',
@@ -77,7 +73,7 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
           onClick={() => router.push(`/messages?message=${chat.messagesWith}`, undefined, { shallow: true })} >
 
           <ListItemAvatar>
-            <Badge color="success"
+            <Badge color='success'
               variant="dot"
               invisible={!isOnline}
               aria-label={chat.name}
@@ -87,15 +83,14 @@ const ChatSenderCard = ({ chat, connectedUsers, deleteChat }) => {
           </ListItemAvatar>
 
           <ListItemText
-            primary={
-              <>
-                <Typography variant='span' component='h5'> {chat.name} </Typography>
+            primary={<h5 > {chat.name} </h5>}
 
-              </>
-            }
             secondary={<>
-              <Typography variant='span' component='h4' sx={{color:'white'}}>{chat.lastMessage?.length > 20 ? `${chat.lastMessage.substring(0, 20)} ...` : chat.lastMessage}</Typography>
-              <Typography variant='span' sx={{ fontSize: '0.65rem', color:'white' }} >{calculateTime(chat.date)}</Typography>
+              <span style={{ color: 'white', diaplay: 'block' }}>
+                {chat.lastMessage?.length > 20 ? `${chat.lastMessage.substring(0, 20)} ...` : chat.lastMessage}
+              </span>
+              <br/>
+              <span style={{ fontSize: '0.65rem', color: 'white' }} >{calculateTime(chat.date)}</span>
             </>
             }
           />
