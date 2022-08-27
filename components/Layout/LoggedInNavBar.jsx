@@ -169,7 +169,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                   invisible={!unreadMessage}
                   aria-label={unreadMessage}
                   sx={badgeStyle}>
-                  {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color={darkMode ? 'white' : 'success'} />}
+                  {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color='white' />}
                 </Badge>
 
               </Box>
@@ -196,7 +196,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                   variant="dot"
                   invisible={!unreadNotification}
                   aria-label={unreadNotification} >
-                  <NotificationsIcon color={unreadNotification ? (darkMode ? 'warning' : 'success') : 'white'} />
+                  {unreadNotification ? <NotificationsActiveIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <NotificationsIcon color='white' />}
                 </Badge>
 
               </Box>
