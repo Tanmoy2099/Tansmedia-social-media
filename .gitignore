@@ -36,3 +36,4 @@ next.config*
 .vscode
 
 temp folder
+/.gitignore
