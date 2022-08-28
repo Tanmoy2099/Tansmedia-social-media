@@ -29,9 +29,7 @@ const Settings = ({ newMessagePopup }) => {
 
   const isFirstRun = useRef();
 
-  const [isVisible, setIsVisible] = useState({
-    currentPassword: false, password: false, confirmPassword: false
-  });
+  const [isVisible, setIsVisible] = useState({    currentPassword: false, password: false, confirmPassword: false  });
 
   const [isTouched, setIsTouched] = useState({ email: false, currentPassword: false, password: false, confirmPassword: false });
 
@@ -199,7 +197,7 @@ const Settings = ({ newMessagePopup }) => {
           ...InputFsStyle,
           endAdornment: <InputAdornment position='end'
             sx={{ cursor: 'pointer' }}
-            onClick={() => setIsVisible(visible => ({ ...visible, password: !visible.currentPassword }))}>
+            onClick={() => setIsVisible(visible => ({ ...visible, currentPassword: !visible.currentPassword }))}>
             {isVisible.password ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
           </InputAdornment>
         }}
