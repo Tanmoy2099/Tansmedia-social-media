@@ -15,9 +15,9 @@ import { toggleMessagePopup } from '../../utils/authUser';
 
 const Settings = ({ newMessagePopup }) => {
 
-  const {signup, utility} = useSelector(state => state)
+  const { signup, utility } = useSelector(state => state)
   const { Password, ConfirmPassword } = signup;
-  
+
   const dispatch = useDispatch();
 
 
@@ -29,7 +29,7 @@ const Settings = ({ newMessagePopup }) => {
 
   const isFirstRun = useRef();
 
-  const [isVisible, setIsVisible] = useState({    currentPassword: false, password: false, confirmPassword: false  });
+  const [isVisible, setIsVisible] = useState({ currentPassword: false, password: false, confirmPassword: false });
 
   const [isTouched, setIsTouched] = useState({ email: false, currentPassword: false, password: false, confirmPassword: false });
 
@@ -198,7 +198,7 @@ const Settings = ({ newMessagePopup }) => {
           endAdornment: <InputAdornment position='end'
             sx={{ cursor: 'pointer' }}
             onClick={() => setIsVisible(visible => ({ ...visible, currentPassword: !visible.currentPassword }))}>
-            {isVisible.password ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
+            {isVisible.currentPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
           </InputAdornment>
         }}
         InputLabelProps={InputFsStyle}
@@ -295,7 +295,7 @@ const Settings = ({ newMessagePopup }) => {
 
 
   return (
-    <Paper sx={{maxWidth:'45rem', mx:'auto', px:1}}>
+    <Paper sx={{ maxWidth: '45rem', mx: 'auto', px: 1 }}>
       <SnackBarMsg msg={msg} setMsg={setMsg} />
 
 
