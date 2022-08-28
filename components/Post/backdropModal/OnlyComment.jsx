@@ -160,7 +160,7 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
             ))}
 
           </Box>) : (
-          <Paper sx={{ height: '3rem'}}>
+          <Paper sx={{ height: '3rem', bgcolor:'white'}}>
             <Typography variant="body1"
               sx={{ textAlign: 'center', color: 'black' }}
               color="initial">

@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <link rel="icon" href="/favicon.png" sizes="16*16" type="image/png" />
+        <link rel="icon" href="/favicon.ico" sizes="16*16" type="image/ico" />
 
         <link rel="stylesheet" type="text/css" href="/listMessages.css" />
 

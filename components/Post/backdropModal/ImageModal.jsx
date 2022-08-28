@@ -21,7 +21,7 @@ const ImageModal = ({ post }) => {
           src={post.picUrl}
           draggable='false'
           sx={{ my: 'auto', width: '100%', height: '100%', maxHeight: '89vh' }}
-        /> : <Paper sx={{height:'3rem'}}>
+        /> : <Paper sx={{height:'3rem', bgcolor:'white'}}>
           <Typography variant="body1"
             sx={{ textAlign: 'center', color:'black' }}
             color="initial">No picture is attached</Typography>
