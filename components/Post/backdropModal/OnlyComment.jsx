@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Avatar, Box, Button, CardContent, CardMedia, Grid, ListItem, ListItemAvatar, ListItemText, Popover, Typography, IconButton, Card } from '@mui/material';
+import { Avatar, Box, CardContent, ListItem, ListItemAvatar, ListItemText, Typography, Card } from '@mui/material';
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -30,7 +30,7 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
         display: 'grid',
         gridColumn: '1fr, 1fr, 1fr, 6fr, 2fr',
         width: { xs: '95vw', sm: '80vw', md: '60vw' },
-        height: { xs: '85vh' },
+        height: { xs: '70vh' },
         transition: 'all 400ms ease-in-out',
         position: 'relative'
       }}>
@@ -144,10 +144,9 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
         <Typography variant='p' sx={{ fontSize: 12, ml: 1.5 }}>
           Comments: {comments.length > 0 ? `${comments.length} total` : 'No comment'}
         </Typography>
-        {(comments.length > 0) && (
+        {(comments.length > 0) ? (
           <Box sx={{
             overflow: 'auto',
-            // height: '54%'
           }}>
             {comments.map(comment => (
               <PostComments
@@ -160,14 +159,15 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
               />
             ))}
 
-          </Box>)
-        }
+          </Box>) : (
+            <Typography variant="body1"
+              sx={{textAlign:'center'}}
+              color="initial">Be the First person to Comment</Typography>
+        )}
 
         {/* Create post */}
         <Box sx={{
           width: '100%',
-          // position: 'absolute',
-          // bottom: 10
         }}>
           <CommentInputfield
             user={user}

@@ -169,6 +169,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
             />
             )
         }
+
         <CardContent sx={{ display: 'flex' }} >
           <a onClick={() => router.push(`/${post.user.username}`)} >
 
@@ -203,8 +204,7 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
                       {post.location}
                     </Typography>
                     )}
-                  </>
-                }
+                  </>}
               />}
             </ListItem>
           </a>

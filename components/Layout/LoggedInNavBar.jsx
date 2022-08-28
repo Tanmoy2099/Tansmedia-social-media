@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Link from 'next/link';
 
-import { AppBar, Box, Toolbar, IconButton, Typography, Badge, MenuItem, Menu, Avatar, Tooltip } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, MenuItem, Menu, Avatar, Tooltip } from '@mui/material';
 
 import MailIcon from '@mui/icons-material/Mail';
 import DraftsIcon from '@mui/icons-material/Drafts';
@@ -104,6 +104,8 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
   const badgeStyle = { cursor: 'pointer', height: 'fit-content', margin: 'auto 0.4rem' };
 
   const lightNav = darkMode ? { background: 'warnging' } : {}
+
+
   return <>
     <AppBar position="sticky"
 
@@ -128,7 +130,6 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
             </a>
 
           </Typography>
-
 
         </Tooltip>
 
@@ -167,16 +168,7 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                 }
               }}>
 
-
               <Box component='span' sx={badgeStyle}>
-
-                {/* <Badge color={darkMode ? 'warning' : 'error'}
-                  variant="dot"
-                  invisible={!unreadMessage}
-                  aria-label={unreadMessage}
-                  sx={badgeStyle}>
-                  {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color='white' />}
-                </Badge> */}
 
                 <StyledBadge
                   overlap="circular"
@@ -188,15 +180,9 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                   {unreadMessage ? <DraftsIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <MailIcon color='white' />}
                 </StyledBadge>
 
-
-
-
-
-
               </Box>
             </Box>
           </Tooltip>
-
 
           <Tooltip title='Notification' arrow >
             <Box
@@ -211,14 +197,6 @@ export default function LoggedInNavBar({ name, username, profilePicUrl, unreadNo
                 }
               }}>
               <Box component='span' sx={badgeStyle}>
-
-                {/* <Badge color={darkMode ? 'warning' : 'error'}
-                  sx={badgeStyle}
-                  variant="dot"
-                  invisible={!unreadNotification}
-                  aria-label={unreadNotification} >
-                  {unreadNotification ? <NotificationsActiveIcon sx={{ color: darkMode ? '#ffc107' : '#ffea00' }} /> : <NotificationsIcon color='white' />}
-                </Badge> */}
 
 
                 <StyledBadge

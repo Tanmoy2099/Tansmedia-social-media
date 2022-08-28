@@ -190,7 +190,7 @@ const Signup = () => {
 
 
   return (
-    <Container component="main" maxWidth="md" sx={{ mb: 2 }}>
+    <Container component="main" maxWidth="md" sx={{ mb: 2, px:1 }}>
 
       {cropImageBackdrop}
 
@@ -200,7 +200,7 @@ const Signup = () => {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          p:1
+          p: 1
         }}
       >
 
@@ -211,7 +211,7 @@ const Signup = () => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h4">
+        <Typography component="h1" variant="h4" sx={{fontSize:{xs:'1.3rem', sm:'1.5rem', md:'2rem'}}}>
           Create an Account
         </Typography>
         <Box component="form" sx={{ mt: 1 }}
@@ -248,6 +248,7 @@ const Signup = () => {
             fullWidth
             autoComplete='username'
             type='text'
+            autoFocus
             id="userName"
             label="Username"
             name="username"
@@ -303,7 +304,6 @@ const Signup = () => {
             label="Email Address"
             name="email"
             autoComplete="email"
-            autoFocus
             InputProps={InputFsStyle}
             InputLabelProps={InputFsStyle}
             labelwidth={20}
@@ -410,8 +410,8 @@ const Signup = () => {
           <Grid container>
             <Grid item>
               <Link href="/login" variant="body1" >
-                <Typography variant='body2' component='h5' sx={{cursor:'pointer'}}>
-                Already have an account? LogIn
+                <Typography variant='body2' component='h5' sx={{ cursor: 'pointer' }}>
+                  Already have an account? LogIn
                 </Typography>
               </Link>
             </Grid>

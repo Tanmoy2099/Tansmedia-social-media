@@ -40,9 +40,9 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
 
   return (
     <>
-      <Box sx={{ display: 'Grid', gridTemplateColumns: '8fr 1fr', mb: '2rem', width: '100%' }}>
+      <Box sx={{ display: 'Grid', gridTemplateColumns: '8fr 1fr', mb: '2rem', width: '100%', height: { xs: '60vh', sm: '80vh' } }}>
 
-        <Box sx={{ height: '80%' }}>
+        <Box sx={{ height: '100%' }}>
           <Cropper
             sx={{ height: '100%', width: '100%' }}
             cropBoxResizable

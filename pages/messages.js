@@ -342,6 +342,7 @@ const Messages = ({ chatsData = [], user }) => {
         height: '80vh'
       }}>
 
+        {/* For mobile */}
         <Box
           sx={{
             display: {
@@ -369,9 +370,10 @@ const Messages = ({ chatsData = [], user }) => {
             </Paper>
           </Drawer>
 
-          {msgChatWindow}
+          {msgChatWindow || searchChatWindow}{/* Need to see if it really works */}
         </Box>
 
+        {/* For tab, laptop, pc */}
         <Box sx={{
           display: {
             xs: 'none',
