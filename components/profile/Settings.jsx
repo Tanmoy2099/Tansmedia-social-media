@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { updatePassword } from '../../utils/authUser';
 import { signupActions } from '../../Store/Signup-slice';
-import { Box, Button, CircularProgress, InputAdornment, Paper, TextField, Typography, Divider, List, Switch } from '@mui/material';
+import { Box, Button, CircularProgress, InputAdornment, Paper, TextField, Typography, Divider, List, Switch, Container, Alert, AlertTitle } from '@mui/material';
 
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
@@ -160,6 +160,7 @@ const Settings = ({ newMessagePopup }) => {
   // ----------------------------------------------------------------------
 
 
+
   //  ----------------------  Change Password  --------------------- 
   const handlePasswordResetSubmit = async (e) => {
     e.preventDefault();
@@ -169,11 +170,14 @@ const Settings = ({ newMessagePopup }) => {
     await updatePassword(currentPassword, password, confirmPassword, setLoading, setMsg);
     dispatch(signupActions.reset());
 
-    setMsg({ hasMsg: true, type: 'info', message: 'success' });
+    setMsg({ hasMsg: true, type: 'info', message: 'Password reset token is sent to your email address' });
     setTimeout(() => {
       setMsg(initialMsg)
-    }, 3000);
+    }, 10000);
   };
+
+
+
 
   const passwordUpdateForm = <>
     <Box component='form'
@@ -295,51 +299,65 @@ const Settings = ({ newMessagePopup }) => {
 
 
   return (
-    <Paper sx={{ maxWidth: '45rem', mx: 'auto', px: 1 }}>
+    <>
       <SnackBarMsg msg={msg} setMsg={setMsg} />
 
+      {msg.hasMsg && <Container sx={{ mazWidth: '10rem', display: 'flex', justifyContent: 'center' }}>
+        <Alert severity="info" sx={{ mt: 1 }}>
+          <AlertTitle>{heading}</AlertTitle>
+          {message}
+        </Alert>
+      </Container>}
 
-      {/* ------------------- Change Email or Name ------------------- */}
-      <Typography component='h2'
-        onClick={() => setShowEmailOrNameUpdateField(prev => !prev)}
-        sx={headerStyle}>
-        Change Email or Name
-      </Typography>
 
-      {showEmailOrNameUpdateField && <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        {emailOrNameUpdateForm}
-      </Box>}
-      {/* ------------------------------------------------------------ */}
-      <Divider sx={{ my: 1.5 }} />
 
-      {/* ----------------------  Reset Password  --------------------- */}
-      <Typography component='h2'
-        onClick={() => setShowPasswordUpdateField(prev => !prev)}
-        sx={headerStyle}>
-        Reset Password
-      </Typography>
 
-      {showPasswordUpdateField && <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-        {passwordUpdateForm}
-      </Box>}
-      {/* -------------------------------------------------------------- */}
-      <Divider sx={{ my: 1.5 }} />
 
-      <List>
+      <Paper sx={{ maxWidth: '45rem', mx: 'auto', px: 1 }}>
+
+
+        {/* ------------------- Change Email or Name ------------------- */}
         <Typography component='h2'
-          onClick={() => setShowMessageSettings(prev => !prev)}
+          onClick={() => setShowEmailOrNameUpdateField(prev => !prev)}
           sx={headerStyle}>
-          show new Message Popup?
+          Change Email or Name
         </Typography>
 
-        {showMessageSettings && <Box sx={{ mx: { xs: '5px', sm: '1rem' }, my: '1rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <Typography sx={{ fontSize: { xs: '1rem', sm: '1.2rem' } }}>Control whether a popup should appear when there is a new Message?
-          </Typography>
-          <Switch checked={popupSettings} onClick={() => toggleMessagePopup(setPopupSettings, setMsg)} />
+        {showEmailOrNameUpdateField && <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          {emailOrNameUpdateForm}
         </Box>}
-      </List>
+        {/* ------------------------------------------------------------ */}
+        <Divider sx={{ my: 1.5 }} />
 
-    </Paper>
+        {/* ----------------------  Reset Password  --------------------- */}
+        <Typography component='h2'
+          onClick={() => setShowPasswordUpdateField(prev => !prev)}
+          sx={headerStyle}>
+          Reset Password
+        </Typography>
+
+        {showPasswordUpdateField && <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          {passwordUpdateForm}
+        </Box>}
+        {/* -------------------------------------------------------------- */}
+        <Divider sx={{ my: 1.5 }} />
+
+        <List>
+          <Typography component='h2'
+            onClick={() => setShowMessageSettings(prev => !prev)}
+            sx={headerStyle}>
+            show new Message Popup?
+          </Typography>
+
+          {showMessageSettings && <Box sx={{ mx: { xs: '5px', sm: '1rem' }, my: '1rem', display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Typography sx={{ fontSize: { xs: '1rem', sm: '1.2rem' } }}>Control whether a popup should appear when there is a new Message?
+            </Typography>
+            <Switch checked={popupSettings} onClick={() => toggleMessagePopup(setPopupSettings, setMsg)} />
+          </Box>}
+        </List>
+
+      </Paper>
+    </>
   )
 }
 

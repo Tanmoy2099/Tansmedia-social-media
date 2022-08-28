@@ -48,14 +48,20 @@ module.exports = class Email {
     await this.send('welcome', `Welcome to ${appName()}!`);
   }
   async passwordUpdated() {
-    await this.send('Successful!', `Hey,
-    Your password is updated successfully!
-    ${appName()}!`);
+
+    const subject = 'Password Changed';
+    const text = 'password is Updated successfully!'
+    const html = `<h2> your password is updated sucessfully! ${appName()}</h2>`
+
+    await this.send(subject, text, html);
   }
   async profileUpdated() {
-    await this.send('Successful!', `Hey,
-    Your profile data is updated successfully!
-    ${appName()}!`);
+
+    const subject = 'Profile Changed';
+    const text = 'Hey, Your profile data is updated successfully!'
+    const html = `<h2> Hey, Your profile data is updated successfully! ${appName()}</h2>`
+
+    await this.send(subject, text, html);
   }
 
   async sendResetPasswordMail() {
