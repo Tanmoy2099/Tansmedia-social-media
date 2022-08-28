@@ -46,7 +46,7 @@ const Navbar = () => {
       <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' }, justifyContent: 'center' }}>
         <ToggleButton />
       </Box>
-      <Box sx={{ display: { xs: 'flexbox'} }}>
+      <Box sx={{ display: { xs: 'flexbox' } }}>
         <Link href={`/login`}  >
           <MenuItem onClick={handleMenuClose}>Login</MenuItem>
         </Link>
@@ -66,15 +66,14 @@ const Navbar = () => {
 
 
 
-
   return <>
     <AppBar position='static'>
       <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
-        <Link href='/' >
-          <Typography variant='h5' sx={{ color: 'white', textDecoration: 'none', cursor: 'pointer' }}>
-            {appName()}
-          </Typography>
-        </Link>
+
+        <Typography variant='h5' sx={{ color: 'white', textDecoration: 'none', cursor: 'pointer' }}>
+          {appName()}
+        </Typography>
+
         <Box sx={{ flexGrow: 1 }} />
         <Stack direction='row' spacing={2} sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
           <Link href='/login' >
