@@ -170,7 +170,7 @@ const Settings = ({ newMessagePopup }) => {
     await updatePassword(currentPassword, password, confirmPassword, setLoading, setMsg);
     dispatch(signupActions.reset());
 
-    setMsg({ hasMsg: true, type: 'info', message: 'Password reset token is sent to your email address' });
+
     setTimeout(() => {
       setMsg(initialMsg)
     }, 10000);
@@ -304,8 +304,8 @@ const Settings = ({ newMessagePopup }) => {
 
       {msg.hasMsg && <Container sx={{ mazWidth: '10rem', display: 'flex', justifyContent: 'center' }}>
         <Alert severity="info" sx={{ mt: 1 }}>
-          <AlertTitle>{heading}</AlertTitle>
-          {message}
+          <AlertTitle>{msg.type}</AlertTitle>
+          {msg.message}
         </Alert>
       </Container>}
 

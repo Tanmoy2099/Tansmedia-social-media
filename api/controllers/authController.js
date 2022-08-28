@@ -8,6 +8,8 @@ const FollowerModel = require('../../models/FollowerModel');
 const NotificationModel = require('../../models/NotificationModel');
 const ChatModel = require('../../models/ChatModel');
 
+const bcrypt = require('bcryptjs');
+
 const catchAsync = require('../../utilsServer/catchAsync');
 const AppError = require('../../utilsServer/customError');
 const { sendResetPasswordMail } = require('../../utilsServer/sendEmail');
@@ -203,14 +205,16 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   const user = await UserModel.findById(userId).select('+password')
 
-  const isCurrentPasswordValid = await UserModel.correctPassword(currentPassword, user.password);
+  const isCurrentPasswordValid = await user.correctPassword(currentPassword, user.password);
+
 
   if (!isCurrentPasswordValid) return next(new AppError(401, 'current Password is not valid'));
+
 
   user.password = password;
   await user.save();
 
-  await new Email(user).passwordUpdated();
+  await new Email(user).passwordUpdated('Password');
 
   createSendToken(userId, res, 201);
 });

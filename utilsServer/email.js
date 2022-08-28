@@ -55,9 +55,9 @@ module.exports = class Email {
 
     await this.send(subject, text, html);
   }
-  async profileUpdated() {
+  async profileUpdated(dataType='Profile') {
 
-    const subject = 'Profile Changed';
+    const subject = `${dataType} Changed`;
     const text = 'Hey, Your profile data is updated successfully!'
     const html = `<h2> Hey, Your profile data is updated successfully! ${appName()}</h2>`
 

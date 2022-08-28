@@ -79,33 +79,9 @@ export const submitPasswordResetToken = async (resetToken, data, setMsg) => {
 
   } catch (error) {
     console.log(error.message)
-    setMsg({ hasMsg: true, type: 'error', message: (error.message) });
+    setMsg({ hasMsg: true, type: 'error', message: (error.response?.data?.message) });
   }
 }
-
-
-
-// export const LoginRefresh = async () => {
-//   const url = `/login_refresh`;
-//   let res;
-
-//   try {
-//     res = await Axios.get(url);
-
-//     if (res.data.status === 'ok') {
-//       dispatch(userActions.setUser(res.data.data));
-//       return res
-//     } else {
-//       throw new Error(res.data.message);
-//     }
-
-//     // setToken();
-//   } catch (error) {
-//     catchErrors(error.response.data || error)
-//   } finally {
-//     return res
-//   }
-// }
 
 
 export const updatePassword = async (currentPassword, password, confirmPassword, setLoading, setMsg) => {
@@ -118,11 +94,12 @@ export const updatePassword = async (currentPassword, password, confirmPassword,
     const res = await Axios.patch(url, body);
 
     if (res.data.status !== 'ok') {
-      setMsg({ hasMsg: 'true', type: 'error', message: res.data.message });
+      setMsg({ hasMsg: true, type: 'error', message: res.data.message });
       throw res.data.message
     }
     const token = res.data.data;
     setToken(token);
+    setMsg({ hasMsg: true, type: 'success', message: 'Successfully updated!' });
 
   } catch (error) {
     setMsg({ hasMsg: true, type: 'error', message: error.message });
@@ -142,7 +119,7 @@ export const toggleMessagePopup = async (setPopupSetting, setMsg) => {
     setMsg({ hasMsg: true, type: 'success', message: 'Updated Successfully' });
     setTimeout(() => {
       setMsg({ hasMsg: false, type: '', message: '' });
-    }, 5000);
+    }, 10000);
   } catch (error) {
     catchErrors(error);
   }
