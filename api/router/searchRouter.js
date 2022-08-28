@@ -14,7 +14,7 @@ const searchName = catchAsync(async (req, res, next) => {
 
   let results = [];
 
-  const regex = new RegExp(`${searchText}`, 'i');
+  const regex = new RegExp(`^${searchText}`, 'i');
 
   if (searchText.length !== 0) {
     results = await UserModel.find({
