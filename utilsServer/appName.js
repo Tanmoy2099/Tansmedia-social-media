@@ -1,5 +1,5 @@
 
-const appName = () => 'Tantegram';
+const appName = () => 'Tansapp';
 
 
 
@@ -9,7 +9,7 @@ const appName = () => 'Tantegram';
 
 
 
-
+    // 'Tantegram';
 
     // 'OnlineChat';
 
