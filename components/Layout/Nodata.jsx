@@ -2,6 +2,7 @@ import { Alert, AlertTitle, Box, Button, Container } from "@mui/material";
 
 
 const alertStructure = (heading = 'Hi!', message = 'Welcome') => <>
+  
   <Container sx={{mazWidth:'10rem', display:'flex', justifyContent:'center'}}>
   <Alert severity="info" sx={{ mt: 1 }}>
     <AlertTitle>{heading}</AlertTitle>

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import {
   Avatar, Box, Card, CardContent, CardMedia, ListItem,
-  ListItemAvatar, ListItemText, Typography, Divider, Skeleton, Container
+  ListItemAvatar, ListItemText, Typography, Divider, Skeleton, Container, AlertTitle, Alert, Button
 } from '@mui/material';
 
 
@@ -19,7 +19,7 @@ import LikesList from "../../components/Post/LikesList";
 
 import calculateTime from '../../utils/calculateTime';
 import baseUrl from "../../utils/baseUrl";
-import { NoPostFound } from "../../components/Layout/NoData";
+// import { NoPostFound } from "../../components/Layout/NoData";
 import { likePost } from "../../utils/postActions";
 
 const PostPage = ({ post, errorLoading, user }) => {
@@ -34,7 +34,24 @@ const PostPage = ({ post, errorLoading, user }) => {
 
   return (
 
-    errorLoading ? <><NoPostFound />
+    errorLoading ? <>
+      {/* <NoPostFound /> */}
+
+      <Container sx={{ mazWidth: '10rem', display: 'flex', justifyContent: 'center' }}>
+        <Alert severity="info" sx={{ mt: 1 }}>
+          <AlertTitle>Sorry!</AlertTitle>
+          No Post Found.
+        </Alert>
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button variant="contained" href='/' sx={{ my: 1 }}>
+            Home
+          </Button>
+          <Box sx={{ flexGrow: 1 }} />
+        </Box>
+      </Container>
+
+
     </> : <Container>
       <Card sx={{ m: 2 }}>
         {
@@ -153,7 +170,7 @@ const PostPage = ({ post, errorLoading, user }) => {
 
 export default PostPage;
 
-PostPage.getInitialProps = async (ctx) => {
+export const getServerSideProps = async ctx => {
   try {
     const { postId } = ctx.query;
     const { token } = parseCookies(ctx);
@@ -165,8 +182,31 @@ PostPage.getInitialProps = async (ctx) => {
 
     if (res.data.status !== 'ok') throw res.data.message
 
-    return { post: res.data.data };
+    return { props: { post: res.data.data } };
   } catch (error) {
-    return { errorLoading: true };
+    return { props: { errorLoading: true } };
   }
-};
+}
+
+
+
+
+// PostPage.getInitialProps = async (ctx) => {
+//   try {
+//     const { postId } = ctx.query;
+//     const { token } = parseCookies(ctx);
+
+//     const url = `${baseUrl}/posts/${postId}`;
+//     const header = { headers: { Authorization: token } };
+
+//     const res = await axios.get(url, header);
+
+//     if (res.data.status !== 'ok') throw res.data.message
+
+//     return { post: res.data.data };
+//   } catch (error) {
+//     return { errorLoading: true };
+//   }
+// };
+
+
