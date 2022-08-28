@@ -21,9 +21,9 @@ import SocketOperation from '../components/profile/SocketOperation';
 
 
 const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, user, userFollowStats }) => {
-
+  
   if (errorLoading) return <NoProfile />;
-
+  
   const socket = useRef();
 
 

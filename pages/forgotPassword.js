@@ -12,7 +12,7 @@ import appName from '../utilsServer/appName';
 
 
 
-const forgotPassword = () => {
+const ForgotPassword = () => {
 
 
   const [isTouched, setIsTouched] = useState(false);
@@ -159,4 +159,4 @@ const forgotPassword = () => {
   </>
 }
 
-export default forgotPassword;
+export default ForgotPassword;

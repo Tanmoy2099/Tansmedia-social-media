@@ -50,7 +50,7 @@ const { newCommentNotification } = require('./utilsServer/gotNewComment');
 const unHandledCrash = (err) => {
   console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err);
-  process.exit(1);
+  // process.exit(1);
 }
 
 
