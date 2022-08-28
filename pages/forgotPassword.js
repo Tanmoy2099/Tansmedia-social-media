@@ -147,7 +147,7 @@ const ForgotPassword = () => {
               <Grid item>
                 <Link href="/signup">
                   <Typography sx={{ fontSize: '0.8rem', cursor: 'pointer' }}>
-                    Don't have an account? Sign Up
+                    {`Don't have an account? Sign Up`}
                   </Typography>
                 </Link>
               </Grid>

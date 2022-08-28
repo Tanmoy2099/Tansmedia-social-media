@@ -22,11 +22,11 @@ const Login = () => {
   const [emailOrUser, setEmailOrUser] = useState('');
   const [password, setPassword] = useState('');
 
+  const [formLoading, setFormLoading] = useState(false);
 
   const initialMsg = { hasMsg: false, type: 'info', message: '' };
   const [msg, setMsg] = useState(initialMsg);
 
-  const [formLoading, setFormLoading] = useState(false);
 
   const regexEmailTest = new RegExp(/^[\w.! #$%&'*+/=? ^_`{|}~-]+@[\w].*[\w{2,3}]+$/);
 
@@ -182,7 +182,7 @@ const Login = () => {
             <Grid item>
               <Link href="/signup">
                 <Typography sx={{ fontSize: '0.8rem', cursor: 'pointer' }}>
-                  Don't have an account? Sign Up
+                  {` Don't have an account? Sign Up`}
                 </Typography>
               </Link>
             </Grid>

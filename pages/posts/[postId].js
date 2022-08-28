@@ -24,10 +24,6 @@ import { likePost } from "../../utils/postActions";
 
 const PostPage = ({ post, errorLoading, user }) => {
 
-    if (errorLoading) {
-      return <NoPostFound />
-  }
-
 
   const [likes, setLikes] = useState(post?.likes);
   const [comments, setComments] = useState(post?.comments);
@@ -37,7 +33,9 @@ const PostPage = ({ post, errorLoading, user }) => {
 
 
   return (
-    <Container>
+
+    errorLoading ? <><NoPostFound />
+    </> : <Container>
       <Card sx={{ m: 2 }}>
         {
           !post?.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> :
@@ -159,10 +157,10 @@ PostPage.getInitialProps = async (ctx) => {
   try {
     const { postId } = ctx.query;
     const { token } = parseCookies(ctx);
-    
+
     const url = `${baseUrl}/posts/${postId}`;
     const header = { headers: { Authorization: token } };
-    
+
     const res = await axios.get(url, header);
 
     if (res.data.status !== 'ok') throw res.data.message

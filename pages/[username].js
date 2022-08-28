@@ -21,22 +21,22 @@ import SocketOperation from '../components/profile/SocketOperation';
 
 
 const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, user, userFollowStats }) => {
-  
-  if (errorLoading) return <NoProfile />;
-  
+
+
   const socket = useRef();
-
-
-  const router = useRouter();
-  const { username } = router.query;
 
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [activeItem, setActiveItem] = useState('profile');
   const [showToastr, setShowToastr] = useState(false);
   const [loggedUserFollowStats, setUserFollowStats] = useState(userFollowStats);
+  const router = useRouter();
 
   const ownAccount = profile._id === user._id;
+  const { username } = router.query;
+
+
+
 
   const handleItemClick = item => setActiveItem(item);
 
@@ -84,9 +84,13 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
     </Box>
   ))
 
-  //NEED TO FIX IT
+
+  // if (errorLoading) return <NoProfile />;
+
+
   return (
-    <>
+    errorLoading ? <><NoProfile />
+    </> : <>
       <SocketOperation user={user} socket={socket}>
 
 

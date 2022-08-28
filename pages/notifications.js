@@ -20,9 +20,6 @@ import SocketOperation from '../components/profile/SocketOperation';
 
 const Notifications = ({ notifications, errorLoading, user, userFollowStats }) => {
 
-  if (errorLoading) {
-    return <NoNotifications />;
-  }
 
   const socket = useRef();
 
@@ -62,12 +59,12 @@ const Notifications = ({ notifications, errorLoading, user, userFollowStats }) =
 
   }, []);
 
-
-
-
+  
 
   return (
-    <>
+    errorLoading ? <>
+      <NoNotifications />
+    </> : <>
       <SocketOperation user={user} socket={socket}>
         <Container sx={{
           mt: '1.5rem',
