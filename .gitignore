@@ -37,3 +37,4 @@ next.config*
 
 temp folder
 /.gitignore
+.vercel
