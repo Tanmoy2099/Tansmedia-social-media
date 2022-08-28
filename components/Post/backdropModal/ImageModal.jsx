@@ -1,5 +1,5 @@
 
-import { Box, CardMedia, Typography } from '@mui/material';
+import { Box, CardMedia, Paper, Typography } from '@mui/material';
 
 const ImageModal = ({ post }) => {
 
@@ -21,11 +21,11 @@ const ImageModal = ({ post }) => {
           src={post.picUrl}
           draggable='false'
           sx={{ my: 'auto', width: '100%', height: '100%', maxHeight: '89vh' }}
-        /> : <>
+        /> : <Paper sx={{height:'3rem'}}>
           <Typography variant="body1"
-            sx={{ textAlign: 'center' }}
-            color="initial">No picture available</Typography>
-        </>
+            sx={{ textAlign: 'center', color:'black' }}
+            color="initial">No picture is attached</Typography>
+        </Paper>
         }
 
 

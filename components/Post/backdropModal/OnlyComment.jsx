@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Avatar, Box, CardContent, ListItem, ListItemAvatar, ListItemText, Typography, Card } from '@mui/material';
+import { Avatar, Box, CardContent, ListItem, ListItemAvatar, ListItemText, Typography, Card, Paper } from '@mui/material';
 
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -160,9 +160,13 @@ const OnlyComment = ({ post, user, setLikes, likes, isLiked, comments, setCommen
             ))}
 
           </Box>) : (
+          <Paper sx={{ height: '3rem'}}>
             <Typography variant="body1"
-              sx={{textAlign:'center'}}
-              color="initial">Be the First person to Comment</Typography>
+              sx={{ textAlign: 'center', color: 'black' }}
+              color="initial">
+              Be the First person to Comment
+            </Typography>
+          </Paper>
         )}
 
         {/* Create post */}
