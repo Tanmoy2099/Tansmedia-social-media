@@ -44,7 +44,7 @@ const CropImageModel = ({ mediaPreview, setMediaPreview, setMedia, setShowModal 
 
         <Box sx={{ height: '100%' }}>
           <Cropper
-            sx={{ height: '100%', width: '100%' }}
+            style={{ height: '100%', width: '100%' }}
             cropBoxResizable
             zoomable
             highlight

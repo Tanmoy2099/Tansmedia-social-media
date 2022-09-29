@@ -1,7 +1,7 @@
 const express = require('express');
 const next = require('next');
 
-
+const connectDb = require('./utilsServer/connectDb');
 const mongoSanitize = require('express-mongo-sanitize');
 
 const dev = process.env.NODE_ENV !== 'production';
@@ -36,7 +36,6 @@ require('dotenv').config({ path: './config.env' });
 const port = process.env.PORT || 3000;
 
 
-const connectDb = require('./utilsServer/connectDb');
 connectDb();
 
 

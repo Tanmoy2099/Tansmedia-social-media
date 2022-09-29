@@ -26,7 +26,7 @@ function MyApp({ Component, pageProps }) {
 }
 
 
-MyApp.getInitialProps = async ({ Component, ctx }) => {
+MyApp.getInitialProps = async ({ ctx }) => {
 
   const { token } = parseCookies(ctx);
 
@@ -38,35 +38,27 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
 
 
 
-  // const protectedRoutes = ctx.pathname === '/'
-  //   || ctx.pathname === '/[username]'
-  //   || ctx.pathname === '/notifications'
-  //   || ctx.pathname === '/posts/[postId]'
-  //   || ctx.pathname === '/messages'
-  //   ;
-
-
   if (!token) {
     protectedRoutes && redirectUser(ctx, '/login');
   } else {
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
+    // if (Component.getInitialProps) {
+    //   pageProps = await Component.getInitialProps(ctx);
+    // }
 
     const url = `${baseUrl}/user`;
     const header = { headers: { Authorization: token } };
 
     try {
       const res = await axios.get(url, header);
-
       if (res.data.status !== 'ok') throw new Error(res.data.message);
 
       const { user, userFollowStats } = res.data.data;
-
       if (user) !protectedRoutes && redirectUser(ctx, '/');
 
-      pageProps.user = user;
-      pageProps.userFollowStats = userFollowStats;
+      pageProps = {...pageProps, user, userFollowStats}
+
+      // pageProps.user = user;
+      // pageProps.userFollowStats = userFollowStats;
 
     } catch (error) {
       destroyCookie(ctx, 'token');

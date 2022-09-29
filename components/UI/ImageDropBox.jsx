@@ -43,12 +43,9 @@ const ImageDropBox = ({
       ...(highlighted && { color: "green" }),
       textAlign: "center",
       fontSize: '1.5rem',
-      // width: { xs: '100%', sm: '80%', md: '60%' },
       width: 'fit-content',
       display: 'flex',
       flexDirection: 'column',
-      // justifyContent: 'center',
-      // alignItems: 'center',
       objectFit: 'contain',
       mx: 'auto',
     }}>
@@ -74,6 +71,11 @@ const ImageDropBox = ({
     e.preventDefault();
     setHighlighted(valueToSet);
   };
+
+
+
+
+
 
   return (
     <>

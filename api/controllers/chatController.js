@@ -61,7 +61,7 @@ exports.getUserInfo = catchAsync(async (req, res, next) => {
   })
 
 })
-
+5
 exports.deleteAChat = catchAsync(async (req, res, next) => {
 
   const { userId } = req;

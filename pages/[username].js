@@ -89,7 +89,8 @@ const ProfilePage = ({ followerLength, followingLength, profile, errorLoading, u
 
 
   return (
-    errorLoading ? <><NoProfile />
+    errorLoading ? <>
+      <NoProfile />
     </> : <>
       <SocketOperation user={user} socket={socket}>
 

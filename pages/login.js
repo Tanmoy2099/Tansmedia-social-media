@@ -60,11 +60,6 @@ const Login = () => {
 
 
 
-
-
-
-
-
     setFormLoading(false);
 
     // setMsg({ hasMsg: true, type: 'error', message: 'hello' })
@@ -114,7 +109,6 @@ const Login = () => {
             required
             fullWidth
             id="email_or_username"
-            // color='success'
             label={authLabel()}
             name="email_or_username"
             autoComplete="email"
@@ -133,7 +127,6 @@ const Login = () => {
           <TextField
             margin="normal"
             variant="outlined"
-            // color='success'
             required
             fullWidth
             name="password"

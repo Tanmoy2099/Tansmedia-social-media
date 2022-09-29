@@ -40,27 +40,25 @@ const sendMsg = async (userId, msgSendToUserId, msg) => {
 
     if (previousChat) {
       previousChat.messages.push(newMsg);
-      await user.save();
 
     } else {
 
       const newChat = { messagesWith: msgSendToUserId, messages: [newMsg] };
       user.chats.unshift(newChat);
-      await user.save();
     }
+    await user.save();
 
     const previousChatForReceiver = msgSendToUser.chats.find(chat => chat.messagesWith.toString() === userId);
 
     if (previousChatForReceiver) {
       previousChatForReceiver.messages.push(newMsg);
-      await msgSendToUser.save();
     }
     //
     else {
       const newChat = { messagesWith: userId, messages: [newMsg] };
       msgSendToUser.chats.unshift(newChat);
-      await msgSendToUser.save();
     }
+    await msgSendToUser.save();
 
     // console.log(newMsg) //remove it
 
@@ -106,7 +104,9 @@ const deleteMsg = async (userId, messagesWith, messageId) => {
     const indexOf = chat.messages
       .map(message => message._id.toString())
       .indexOf(messageToDelete._id.toString());
-
+//                    or
+    // const indexOf = chat.messages.findIndex(msg => msg._id.toString() === messageId)
+    
     await chat.messages.splice(indexOf, 1);
 
     await user.save();
