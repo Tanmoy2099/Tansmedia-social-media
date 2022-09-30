@@ -56,7 +56,6 @@ const Messages = ({ chatsData = [], user }) => {
     if (user.unreadMessage) setMessageToUnread();
     if (!socket.current) { socket.current = io(pureBaseUrl) }
 
-
     if (socket.current) {
       socket.current.emit('join', { userId: user._id });
 
