@@ -33,10 +33,9 @@ const Index = ({ user, postsData = [], errorLoading }) => {
 
 
 
-
   useEffect(() => {
     document.title = `Welcome, ${user.name.split(' ')[0]}`;
-  }, []);
+  }, [user.name]); // user.name added
 
 
   useEffect(() => {

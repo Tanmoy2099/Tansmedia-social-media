@@ -1,11 +1,13 @@
 const express = require('express');
 const next = require('next');
+require('dotenv').config({ path: './config.env' });
 
 const connectDb = require('./utilsServer/connectDb');
 const mongoSanitize = require('express-mongo-sanitize');
 
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
+
 
 const app = express();
 app.use(express.json());
@@ -19,7 +21,6 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   /* options */
 });
-
 
 
 const authRouter = require('./api/router/authRouter');
@@ -47,7 +48,7 @@ const { newCommentNotification } = require('./utilsServer/gotNewComment');
 
 
 const unHandledCrash = (err) => {
-  console.log('UNHANDLED REJECTION!  Shutting down...');
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
   console.log(err);
   process.exit(1);
 }

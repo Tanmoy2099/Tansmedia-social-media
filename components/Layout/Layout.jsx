@@ -3,12 +3,12 @@ import { useEffect } from 'react';
 import Router, { useRouter } from 'next/router';
 import nProgress from 'nprogress';
 
-import { Box } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import CssBaseline from "@mui/material/CssBaseline";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { grey } from '@mui/material/colors';
 
-import { useSelector, useDispatch, Provider } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Navbar from './Navbar';
 import Footer from './Footer/Footer';
@@ -16,7 +16,6 @@ import LoggedInNavBar from './LoggedInNavBar';
 import { utilityActions } from '../../Store/Utility-slice';
 import Sidebar from '../Sidebar/Sidebar';
 import Friendsbar from './Friendsbar';
-// import store from '../../Store/Store';
 
 const Layout = ({ children, user }) => {
 
@@ -60,7 +59,6 @@ const Layout = ({ children, user }) => {
   const pathlist = ['/messages'];
 
   return <>
-    {/* <Provider store={store}> */}
     <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
       <CssBaseline />
       <Box component='main' sx={{
@@ -99,8 +97,7 @@ const Layout = ({ children, user }) => {
           </Box>
         </>}
       </Box>
-      </ThemeProvider>
-      {/* </Provider> */}
+    </ThemeProvider>
   </>
 }
 

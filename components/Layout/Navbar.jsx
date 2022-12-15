@@ -27,39 +27,39 @@ const Navbar = () => {
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
-      anchorEl={ anchorEl }
-      anchorOrigin={ {
+      anchorEl={anchorEl}
+      anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
-      } }
-      id={ menuId }
+      }}
+      id={menuId}
       keepMounted
-      transformOrigin={ {
+      transformOrigin={{
         vertical: 'top',
         horizontal: 'right',
-      } }
-      open={ isMenuOpen }
-      onClose={ handleMenuClose }
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
     >
-      {/* ------------------ drop menu --------------------- */ }
+      {/* ------------------ drop menu --------------------- */}
 
-      <Box sx={ { display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' }, justifyContent: 'center' } }>
+      <Box sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' }, justifyContent: 'center' }}>
         <ToggleButton />
       </Box>
-      <Box sx={ { display: { xs: 'flexbox' } } }>
-        <Link href={ `/login` }  >
-          <MenuItem onClick={ handleMenuClose }>Login</MenuItem>
+      <Box sx={{ display: { xs: 'flexbox' } }}>
+        <Link href={`/login`}  >
+          <MenuItem onClick={handleMenuClose}>Login</MenuItem>
         </Link>
       </Box>
 
-      <Box sx={ { display: { xs: 'flexbox' } } }>
-        <Link href={ `/signup` }  >
-          <MenuItem onClick={ handleMenuClose }>Signup</MenuItem>
+      <Box sx={{ display: { xs: 'flexbox' } }}>
+        <Link href={`/signup`}  >
+          <MenuItem onClick={handleMenuClose}>Signup</MenuItem>
         </Link>
       </Box>
 
 
-      {/* ------------------------------------------------------------- */ }
+      {/* ------------------------------------------------------------- */}
     </Menu>
   );
 
@@ -68,21 +68,21 @@ const Navbar = () => {
 
   return <>
     <AppBar position='static'>
-      <Toolbar sx={ { display: 'flex', alignItems: 'center' } }>
+      <Toolbar sx={{ display: 'flex', alignItems: 'center' }}>
 
-        <Typography variant='h5' sx={ { color: 'white', textDecoration: 'none', cursor: 'pointer' } }>
-          { appName() }
+        <Typography variant='h5' sx={{ color: 'white', textDecoration: 'none', cursor: 'pointer' }}>
+          {appName()}
         </Typography>
 
-        <Box sx={ { flexGrow: 1 } } />
-        <Stack direction='row' spacing={ 2 } sx={ { display: { xs: 'none', sm: 'none', md: 'flex' } } }>
+        <Box sx={{ flexGrow: 1 }} />
+        <Stack direction='row' spacing={2} sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}>
           <Link href='/login' >
-            <Typography sx={ isActive('/login') ? { ...activeCSS, ...navDecor } : navDecor }>
+            <Typography sx={isActive('/login') ? { ...activeCSS, ...navDecor } : navDecor}>
               Login
             </Typography>
           </Link>
           <Link href='/signup' >
-            <Typography sx={ isActive('/signup') ? { ...activeCSS, ...navDecor } : navDecor } >
+            <Typography sx={isActive('/signup') ? { ...activeCSS, ...navDecor } : navDecor} >
               signup
             </Typography>
           </Link>
@@ -97,14 +97,14 @@ const Navbar = () => {
           aria-label="display more actions"
           edge="end"
           color="inherit"
-          sx={ { display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' } } }
-          onClick={ handleProfileMenuOpen }
+          sx={{ display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' } }}
+          onClick={handleProfileMenuOpen}
         >
           <MoreIcon />
         </IconButton>
 
 
-        { renderMenu }
+        {renderMenu}
 
 
       </Toolbar>

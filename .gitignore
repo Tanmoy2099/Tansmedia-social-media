@@ -26,9 +26,9 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # local env files
-.env*.local 
+*.env.* 
 config.env
-*config*
+next.config*
 
 # vercel
 .vercel
@@ -38,4 +38,3 @@ config.env
 temp folder
 /.gitignore
 .vercel
-next.config.js

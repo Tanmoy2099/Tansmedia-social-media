@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "next lint",
+    "export": " next export"
   },
   "dependencies": {
     "@emotion/react": "^11.10.0",
@@ -28,6 +30,7 @@
     "next": "12.2.3",
     "nodemailer": "^6.7.7",
     "nodemailer-sendgrid-transport": "^0.2.0",
+    "nodemon": "^2.0.19",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",
     "prop-types": "^15.8.1",
@@ -44,8 +47,7 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
-    "eslint": "8.20.0",
-    "eslint-config-next": "12.2.3",
-    "nodemon": "^2.0.20"
+    "eslint": "^8.20.0",
+    "eslint-config-next": "12.2.3"
   }
 }

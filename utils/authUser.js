@@ -4,7 +4,7 @@ import axios from "axios";
 import baseUrl from "./baseUrl";
 import catchErrors from "./catchErrors";
 import cookie from "js-cookie";
-import { userActions } from "../Store/user-slice";
+// import { userActions } from "../Store/user-slice";
 import { signupActions } from "../Store/Signup-slice";
 
 export const Axios = axios.create({
@@ -14,8 +14,8 @@ export const Axios = axios.create({
 
 
 export const registerUser = async (user, profilePicUrl, dispatch) => {
-
   const url = `${baseUrl}/user/signup`;
+
   const res = await axios.post(url, { ...user, profilePicUrl });
 
   //res will send user token, need to save it
@@ -30,7 +30,7 @@ export const registerUser = async (user, profilePicUrl, dispatch) => {
 export const loginUser = async (user) => {
 
   const url = `${baseUrl}/user/login`;
-
+  console.log(url);
   const res = await axios.post(url, user);
 
   if (res.data.status === 'ok') { setToken(res.data.data) }

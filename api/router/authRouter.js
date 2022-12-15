@@ -6,9 +6,9 @@ const authController = require('../controllers/authController');
 
 const router = Router();
 
+router.post('/login', authController.login);
 router.get('/:username', authController.username);
 router.post('/signup', authController.signup);
-router.post('/login', authController.login);
 
 
 //Forgot Password
