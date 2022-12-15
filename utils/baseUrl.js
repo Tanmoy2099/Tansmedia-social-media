@@ -4,4 +4,5 @@ const pureBaseUrl = process.env.NODE_ENV !== "production" ? 'http://localhost:30
 const baseUrl = `${pureBaseUrl}/api/v1`;
 
 exports = { pureBaseUrl };
+
 module.exports = baseUrl;
