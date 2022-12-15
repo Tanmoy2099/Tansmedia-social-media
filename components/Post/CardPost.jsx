@@ -2,6 +2,7 @@
 import { useState } from 'react';
 // import Link from 'next/link';
 
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 import {
@@ -62,45 +63,45 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
 
 
     return <>
-      <SnackBarMsg msg={msg} setMsg={setMsg} />
+      <SnackBarMsg msg={ msg } setMsg={ setMsg } />
       <Backdrop
-        sx={{
+        sx={ {
           color: '#222',
           zIndex: (theme) => theme.zIndex.drawer + 1,
           transition: 'all 300ms ease-in-out'
-        }}
-        open={modalBoolean}
+        } }
+        open={ modalBoolean }
       >
-        <Paper sx={{
+        <Paper sx={ {
           padding: 1,
           width: 'fit-content',
           height: 'fit-content',
           position: 'relative'
-        }}>
+        } }>
           <>
             <Modal
-              post={post}
-              user={user}
-              likes={likes}
-              isLiked={isLiked}
-              comments={comments}
-              setLikes={setLikes}
-              setComments={setComments}
-              setOtherModal={setOtherModal}
+              post={ post }
+              user={ user }
+              likes={ likes }
+              isLiked={ isLiked }
+              comments={ comments }
+              setLikes={ setLikes }
+              setComments={ setComments }
+              setOtherModal={ setOtherModal }
             />
           </>
 
-          {/* Close Button */}
+          {/* Close Button */ }
           <IconButton
-            onClick={closeButton}
-            sx={{
+            onClick={ closeButton }
+            sx={ {
               position: 'absolute',
               bottom: -25,
               right: '47%',
               bgcolor: 'white',
               padding: 0.1
-            }} >
-            <CancelIcon sx={{
+            } } >
+            <CancelIcon sx={ {
               height: { xs: '2.5rem', xl: '3rem' },
               width: { xs: '2.5rem', xl: '3rem' },
               color: '#1e88e5',
@@ -109,24 +110,24 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
                 bgcolor: '#eee',
                 borderRadius: '50%'
               }
-            }} />
+            } } />
           </IconButton>
 
 
-          {/* Image Button */}
-          {/* {post.picUrl && */}
+          {/* Image Button */ }
+          {/* {post.picUrl && */ }
           <IconButton
-            onClick={flipButton}
-            sx={{
+            onClick={ flipButton }
+            sx={ {
               ...flipButtonStyle,
               border: '1px solid #1e88e5',
               position: 'absolute',
               bottom: { xs: -20, sm: -25 },
               bgcolor: 'white',
               padding: 0.1
-            }}>
+            } }>
 
-            <ForwardIcon sx={{
+            <ForwardIcon sx={ {
               transform: `${showPhotoModal ? 'rotate(0deg)' : 'rotate(180deg)'}`,
               height: { sm: '2rem', md: '2.5rem' },
               width: { sm: '2rem', md: '2.5rem' },
@@ -137,140 +138,137 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
                 bgcolor: '#eee',
                 borderRadius: '50%'
               }
-            }} />
+            } } />
           </IconButton>
-          {/* } */}
+          {/* } */ }
 
         </Paper>
       </Backdrop>
     </>
   }
 
-
+  {/*(post.picUrl && <CardMedia component='img'  line 165 before */ }
 
   return (
     <>
-      <ShowModal modalBoolean={showPhotoModal} setModalBoolean={setShowPhotoModal} Modal={ImageModal} setOtherModal={setShowCommentModal} />
-      <ShowModal modalBoolean={showCommentModal} setModalBoolean={setShowCommentModal} Modal={OnlyComment} setOtherModal={setShowPhotoModal} />
+      <ShowModal modalBoolean={ showPhotoModal } setModalBoolean={ setShowPhotoModal } Modal={ ImageModal } setOtherModal={ setShowCommentModal } />
+      <ShowModal modalBoolean={ showCommentModal } setModalBoolean={ setShowCommentModal } Modal={ OnlyComment } setOtherModal={ setShowPhotoModal } />
 
-      {/* <Container sx={{
-        my: 2,
-        maxWidth: { xs: '100%', sm: '95%', md: '45rem', lg: '60%' }
-      }} > */}
       <Paper>
         {
-          !post.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> :
-            (post.picUrl && <CardMedia component='img'
+          !post.picUrl ? <Skeleton variant="rectangular" width='10rem' height='100%' /> : (
+            post.picUrl && <CardMedia component='img'
               alt='img post'
-              src={post.picUrl}
+              src={ post.picUrl }
               draggable='false'
-              sx={{ cursor: 'pointer' }}
-              onClick={() => setShowPhotoModal(true)}
+              // layout="fill"
+              style={ { cursor: 'pointer' } }
+              onClick={ () => setShowPhotoModal(true) }
             />
-            )
+          )
         }
 
-        <CardContent sx={{ display: 'flex' }} >
-          <a onClick={() => router.push(`/${post.user.username}`)} >
+        <CardContent sx={ { display: 'flex' } } >
+          <a onClick={ () => router.push(`/${post.user.username}`) } >
 
-            <ListItem alignItems="flex-start" sx={{ cursor: 'pointer', width: 'fit-content', cursor: 'pointer' }}>
-              {!post.user.profilePicUrl && loading ? <Skeleton variant="circular" width={40} height={40} /> : <ListItemAvatar>
-                <Avatar alt="profile pic" src={post.user.profilePicUrl} />
-              </ListItemAvatar>}
+            <ListItem alignItems="flex-start" sx={ { cursor: 'pointer', width: 'fit-content', cursor: 'pointer' } }>
+              { !post.user.profilePicUrl && loading ? <Skeleton variant="circular" width={ 40 } height={ 40 } /> : <ListItemAvatar>
+                <Avatar alt="profile pic" src={ post.user.profilePicUrl } />
+              </ListItemAvatar> }
 
-              {!post.user.name && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }}
+              { !post.user.name && loading ? <Skeleton variant="text" sx={ { width: '6rem', mx: 1, fontSize: '1rem' } }
 
               /> : <ListItemText
-                sx={{ width: 'fit-content', maxWidth: '10rem' }}
-                primary={post.user.name}
+                sx={ { width: 'fit-content', maxWidth: '10rem' } }
+                primary={ post.user.name }
                 secondary={
                   <>
-                    {!post.createdAt && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1.2rem' }} /> : <Typography
-                      sx={{ display: 'block' }}
+                    { !post.createdAt && loading ? <Skeleton variant="text" sx={ { width: '6rem', mx: 1, fontSize: '1.2rem' } } /> : <Typography
+                      sx={ { display: 'block' } }
                       component="span"
                       variant="body2"
                       color="text.primary"
                     >
 
-                      {calculateTime(post.createdAt)}
-                    </Typography>}
+                      { calculateTime(post.createdAt) }
+                    </Typography> }
 
-                    {!post.location && loading ? <Skeleton variant="text" sx={{ width: '6rem', mx: 1, fontSize: '1rem' }} /> : (post.location && <Typography
-                      sx={{ display: 'block' }}
+                    { !post.location && loading ? <Skeleton variant="text" sx={ { width: '6rem', mx: 1, fontSize: '1rem' } } /> : (post.location && <Typography
+                      sx={ { display: 'block' } }
                       component="span"
                       variant="body2"
                       color="text.primary"
                     >
-                      {post.location}
+                      { post.location }
                     </Typography>
-                    )}
-                  </>}
-              />}
+                    ) }
+                  </> }
+              /> }
             </ListItem>
           </a>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={ { flexGrow: 1 } } />
 
-          {(user.role === 'root' || post.user._id === user._id) && (
+          { (user.role === 'root' || post.user._id === user._id) && (
             <>
               <IconButton aria-label="delete"
-                onClick={(e) => setAnchor(e.currentTarget)}
-                sx={{ height: 'fit-content', my: 'auto' }}>
+                onClick={ (e) => setAnchor(e.currentTarget) }
+                sx={ { height: 'fit-content', my: 'auto' } }>
                 <DeleteOutlineIcon />
               </IconButton>
 
               <Popover
-                open={Boolean(anchor)}
-                anchorEl={anchor}
-                anchorOrigin={{
+                open={ Boolean(anchor) }
+                anchorEl={ anchor }
+                anchorOrigin={ {
                   vertical: 'center',
                   horizontal: 'left'
-                }}
-                transformOrigin={{
+                } }
+                transformOrigin={ {
                   vertical: 'center',
                   horizontal: 'right'
-                }}
-                onClose={() => setAnchor(null)}
+                } }
+                onClose={ () => setAnchor(null) }
               >
-                <Box sx={{
+                <Box sx={ {
                   padding: '0.5rem',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center'
-                }}>
+                } }>
                   <Typography component='p' >This action is Irreversible</Typography>
                   <Button variant='contained'
                     color='error'
                     size="small"
-                    sx={{ my: 1, mx: 'auto' }}
-                    onClick={() => deletePost(post._id, setPosts, setShowToastr, setMsg)}
+                    sx={ { my: 1, mx: 'auto' } }
+                    onClick={ () => deletePost(post._id, setPosts, setShowToastr, setMsg) }
                   >Delete</Button>
                 </Box>
               </Popover>
 
             </>
-          )}
+          ) }
 
         </CardContent>
 
         <Divider display='hidden' />
 
         <CardContent>
-          {!post.text ? <Skeleton variant="text" sx={{ width: '100%', mx: 1, fontSize: '1.3rem' }} /> : <Paper elevation1='true' sx={{ p: 1 }}>
+          { !post.text ? <Skeleton variant="text" sx={ { width: '100%', mx: 1, fontSize: '1.3rem' } } /> : <Paper elevation1='true' sx={ { p: 1 } }>
             <h5>Post:</h5>
-            <Typography variant="body2" color="text.primary" sx={{ mx: { lg: 3, md: 2, xs: 1 } }}>
-              {post.text}
+            <Typography variant="body2" color="text.primary" sx={ { mx: { lg: 3, md: 2, xs: 1 } } }>
+              { post.text }
             </Typography>
-          </Paper>}
+          </Paper> }
         </CardContent>
 
         <Divider display='hidden' />
 
 
-        <Box sx={{ display: 'flex', m: 1, width: 'fit-content' }}>
+        <Box sx={ { display: 'flex', m: 1, width: 'fit-content' } }>
 
-          {/* Post likes */}
+          {/* Post likes */ }
           <Box component='span'
-            onClick={() => {
+            onClick={ () => {
 
               if (socket.current) {
                 socket.current.emit('likePost', {
@@ -290,51 +288,53 @@ const CardPost = ({ post, user, setPosts, setShowToastr, loading, socket }) => {
               } else {
                 likePost(post._id, user._id, setLikes, setMsg, isLiked ? false : true)
               }
-            }}
-            sx={{ cursor: 'pointer' }} >
-            {isLiked ? <FavoriteIcon color='error' /> : <FavoriteBorderIcon sx={{ cursor: 'pointer' }} color='error' />}
+            } }
+            sx={ { cursor: 'pointer' } } >
+            { isLiked ? <FavoriteIcon color='error' /> : <FavoriteBorderIcon sx={ { cursor: 'pointer' } } color='error' /> }
           </Box>
 
-          {(likes.length > 0) && (
-            <>
-              <LikesList postId={post._id} likes={likes} />
-            </>
-          )}
+          {
+            (likes.length > 0) && (
+              <>
+                <LikesList postId={ post._id } likes={ likes } />
+              </>
+            )
+          }
         </Box>
 
-        <Typography variant='p' sx={{ fontSize: 12, ml: 1.5 }}>Comments: {comments.length > 0 ? `${comments.length} total` : 'No comment'} </Typography>
+        <Typography variant='p' sx={ { fontSize: 12, ml: 1.5 } }>Comments: { comments.length > 0 ? `${comments.length} total` : 'No comment' } </Typography>
         {
-          !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } }} /> : ((comments?.length > 0) && <CardContent>
-            {comments.map((comment, i) => i < 3 && (
+          !post._id ? <Skeleton variant="rectangular" sx={ { width: '100%', height: { xs: '10rem', sm: '20rem', lg: '30rem' } } } /> : ((comments?.length > 0) && <CardContent>
+            { comments.map((comment, i) => i < 3 && (
               <PostComments
-                key={comment._id}
-                comment={comment}
-                postId={post._id}
-                user={user}
-                setComments={setComments}
+                key={ comment._id }
+                comment={ comment }
+                postId={ post._id }
+                user={ user }
+                setComments={ setComments }
 
               />
-            ))}
+            )) }
           </CardContent>
           )
         }
 
         {
           comments.length > 3 && (
-            <Button variant='outlined' sx={{ color: 'teal', mx: 2, mb: 2 }}
-              onClick={() => setShowCommentModal(true)}
+            <Button variant='outlined' sx={ { color: 'teal', mx: 2, mb: 2 } }
+              onClick={ () => setShowCommentModal(true) }
               size='small'>View more</Button>
           )
         }
         {
-          !post._id ? <Skeleton variant="rectangular" sx={{ width: '100%', height: '4rem' }} /> : <CommentInputField
-            user={user}
-            postId={post._id}
-            socket={socket}
-            setComments={setComments} />
+          !post._id ? <Skeleton variant="rectangular" sx={ { width: '100%', height: '4rem' } } /> : <CommentInputField
+            user={ user }
+            postId={ post._id }
+            socket={ socket }
+            setComments={ setComments } />
         }
       </Paper>
-      {/* </Container> */}
+
 
 
     </>
